@@ -24,6 +24,14 @@
     <!--or something similar.-->
     <string name="app_name">Sunshine</string>
 
+    <string name="error_message">Data Not Retrieved</string>
+
+    <!-- - - - - - - - - - - - - -->
+    <!--Used by Menu-->
+    <!-- - - - - - - - - - - - - -->
+    <string name="menu_title">Refresh</string>
+
+
 
     <!-- - - - - - - - - - - - - -->
     <!--Used by SunshineDateUtils-->
