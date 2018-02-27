@@ -3,9 +3,12 @@ package com.markfeldman.theweatheroutside.activities;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.markfeldman.theweatheroutside.R;
 import com.markfeldman.theweatheroutside.data.WeatherPreferences;
@@ -29,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         errorMessage = (TextView)findViewById(R.id.tv_error_message_display);
         progressBar = (ProgressBar) findViewById(R.id.pb_loading_indicator);
         weatherData = (TextView)findViewById(R.id.weather_data);
-        retrieveData();
     }
 
     private void retrieveData(){
@@ -45,6 +47,24 @@ public class MainActivity extends AppCompatActivity {
     private void displayWeather(){
         errorMessage.setVisibility(View.INVISIBLE);
         weatherData.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.location_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_refresh){
+            weatherData.setText("");
+            retrieveData();
+            weatherData.setVisibility(View.VISIBLE);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public class RetrieveWeatherOnline extends AsyncTask<String, Void, String[]>{
