@@ -3,6 +3,9 @@ package com.markfeldman.theweatheroutside.activities;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,15 +17,17 @@ import com.markfeldman.theweatheroutside.R;
 import com.markfeldman.theweatheroutside.data.WeatherPreferences;
 import com.markfeldman.theweatheroutside.utilities.JsonUtils;
 import com.markfeldman.theweatheroutside.utilities.NetworkUtils;
+import com.markfeldman.theweatheroutside.utilities.WeatherRecyclerViewAdapter;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity {
-    private TextView weatherData;
+public class MainActivity extends AppCompatActivity implements WeatherRecyclerViewAdapter.WeatherRowClicked {
     private TextView errorMessage;
     private ProgressBar progressBar;
+    private RecyclerView mRecyclerView;
+    private WeatherRecyclerViewAdapter weatherRecyclerViewAdapter;
 
 
     @Override
@@ -31,7 +36,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         errorMessage = (TextView)findViewById(R.id.tv_error_message_display);
         progressBar = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-        weatherData = (TextView)findViewById(R.id.weather_data);
+        mRecyclerView = (RecyclerView) findViewById(R.id.weather_recyclerView);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        weatherRecyclerViewAdapter = new WeatherRecyclerViewAdapter(this);
+        mRecyclerView.setAdapter(weatherRecyclerViewAdapter);
+        retrieveData();
     }
 
     private void retrieveData(){
@@ -40,13 +52,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void errorMessage(){
+        mRecyclerView.setVisibility(View.INVISIBLE);
         errorMessage.setVisibility(View.VISIBLE);
-        weatherData.setVisibility(View.INVISIBLE);
     }
 
     private void displayWeather(){
+        mRecyclerView.setVisibility(View.VISIBLE);
         errorMessage.setVisibility(View.INVISIBLE);
-        weatherData.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -59,12 +71,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh){
-            weatherData.setText("");
+            mRecyclerView.setVisibility(View.INVISIBLE);
             retrieveData();
-            weatherData.setVisibility(View.VISIBLE);
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClicked(int id) {
+        Toast.makeText(this, "You Clicked Row " + id + "!", Toast.LENGTH_LONG).show();
     }
 
     public class RetrieveWeatherOnline extends AsyncTask<String, Void, String[]>{
@@ -101,9 +116,10 @@ public class MainActivity extends AppCompatActivity {
             progressBar.setVisibility(View.INVISIBLE);
 
             if (jsonResults!=null){
-                for (String result : jsonResults){
-                    weatherData.append(result + "\n\n\n");
-                }
+                displayWeather();
+                weatherRecyclerViewAdapter.setWeatherData(jsonResults);
+            }else{
+                errorMessage();
             }
         }
     }

@@ -63,8 +63,6 @@ public final class NetworkUtils {
             e.printStackTrace();
         }
 
-        Log.v(TAG, "Built URI " + url);
-
         assert url != null;
         return url.toString();
     }
@@ -78,7 +76,6 @@ public final class NetworkUtils {
 
     public static String okHttpDataRetrieval(String weatherLocation) throws IOException {
         String url = URLStringbuildUrl(weatherLocation);
-        Log.v(TAG, "RESPONSE ===== " + url);
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
