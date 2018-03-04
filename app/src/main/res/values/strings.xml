@@ -27,10 +27,11 @@
     <string name="error_message">Data Not Retrieved</string>
 
     <!-- - - - - - - - - - - - - -->
-    <!--Used by Menu-->
+    <!--Used by Menus-->
     <!-- - - - - - - - - - - - - -->
     <string name="menu_title">Refresh</string>
     <string name="menu_map_title">Show Map</string>
+    <string name="menu_share">Share Weather!</string>
 
 
 
