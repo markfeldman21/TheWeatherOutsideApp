@@ -1,5 +1,6 @@
 package com.markfeldman.theweatheroutside.activities;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -78,8 +79,10 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
     }
 
     @Override
-    public void onClicked(int id) {
-        Toast.makeText(this, "You Clicked Row " + id + "!", Toast.LENGTH_LONG).show();
+    public void onClicked(String weather) {
+        Intent showDetailActivity = new Intent(MainActivity.this, DetailActivity.class);
+        showDetailActivity.putExtra(Intent.EXTRA_TEXT,weather);
+        startActivity(showDetailActivity);
     }
 
     public class RetrieveWeatherOnline extends AsyncTask<String, Void, String[]>{

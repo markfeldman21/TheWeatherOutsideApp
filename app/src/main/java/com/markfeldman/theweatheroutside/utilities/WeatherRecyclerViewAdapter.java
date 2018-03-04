@@ -14,7 +14,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
     private WeatherRowClicked weatherRowClickedListener;
 
     public interface WeatherRowClicked{
-        void onClicked(int id);
+        void onClicked(String weather);
     }
 
     public WeatherRecyclerViewAdapter(WeatherRowClicked weatherRowClickedListener){
@@ -69,7 +69,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            weatherRowClickedListener.onClicked(adapterPosition);
+            weatherRowClickedListener.onClicked(jsonResults[adapterPosition]);
         }
     }
 }
