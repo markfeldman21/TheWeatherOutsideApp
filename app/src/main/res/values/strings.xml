@@ -30,6 +30,7 @@
     <!--Used by Menu-->
     <!-- - - - - - - - - - - - - -->
     <string name="menu_title">Refresh</string>
+    <string name="menu_map_title">Show Map</string>
 
 
 

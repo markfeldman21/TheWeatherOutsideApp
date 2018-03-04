@@ -1,6 +1,7 @@
 package com.markfeldman.theweatheroutside.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import org.json.JSONException;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements WeatherRecyclerViewAdapter.WeatherRowClicked {
+    private final String TAG = MainActivity.class.getSimpleName();
     private TextView errorMessage;
     private ProgressBar progressBar;
     private RecyclerView mRecyclerView;
@@ -71,11 +73,35 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_refresh){
-            mRecyclerView.setVisibility(View.INVISIBLE);
-            retrieveData();
+        switch (id){
+            case R.id.action_refresh:{
+                mRecyclerView.setVisibility(View.INVISIBLE);
+                retrieveData();
+                break;
+            }
+            case R.id.show_map:{
+                showMap();
+                break;
+            }
         }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showMap(){
+        String address ="32 washburn ave, newton, ma";
+        String geoScheme = "geo:0,0?q=";
+
+        Uri geoLocation = Uri.parse(geoScheme + address);
+        Intent showMap = new Intent(Intent.ACTION_VIEW,geoLocation);
+
+        if (showMap.resolveActivity(getPackageManager()) != null) {
+            startActivity(showMap);
+        } else {
+            Log.d(TAG, "Couldn't call " + geoLocation.toString()
+                    + ", no receiving apps installed!");
+        }
+
     }
 
     @Override
