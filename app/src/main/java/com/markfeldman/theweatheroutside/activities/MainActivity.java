@@ -3,6 +3,9 @@ package com.markfeldman.theweatheroutside.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,8 +28,11 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity implements WeatherRecyclerViewAdapter.WeatherRowClicked {
+public class MainActivity extends AppCompatActivity implements WeatherRecyclerViewAdapter.WeatherRowClicked,
+        LoaderManager.LoaderCallbacks<String[]>{
     private final String TAG = MainActivity.class.getSimpleName();
+    private static final int LOADER_ID = 22;
+    private static final String WEATHER_LOCATION_FOR_LOADER = "WEATHER LOCATION";
     private TextView errorMessage;
     private ProgressBar progressBar;
     private RecyclerView mRecyclerView;
@@ -51,7 +57,20 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
 
     private void retrieveData(){
         String defaultLocation = WeatherPreferences.getPreferredWeatherLocation(this);
-        new RetrieveWeatherOnline().execute(defaultLocation);
+        Bundle queryBundle = new Bundle();
+        queryBundle.putString(WEATHER_LOCATION_FOR_LOADER,defaultLocation);
+        LoaderManager loaderManager = getSupportLoaderManager();
+        Loader<String[]> loader = loaderManager.getLoader(LOADER_ID);
+        if (loader==null){
+            Log.d(TAG, "LOADER IS NULL");
+            loaderManager.initLoader(LOADER_ID,queryBundle,this);
+        }else{
+            Log.d(TAG, "LOADER EXISTS RESTARTING");
+            invalidateData();
+            loaderManager.restartLoader(LOADER_ID,queryBundle,this);
+        }
+
+
     }
 
     private void errorMessage(){
@@ -62,6 +81,10 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
     private void displayWeather(){
         mRecyclerView.setVisibility(View.VISIBLE);
         errorMessage.setVisibility(View.INVISIBLE);
+    }
+
+    private void invalidateData() {
+        weatherRecyclerViewAdapter.setWeatherData(null);
     }
 
     @Override
@@ -111,45 +134,68 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
         startActivity(showDetailActivity);
     }
 
-    public class RetrieveWeatherOnline extends AsyncTask<String, Void, String[]>{
+    @Override
+    public Loader<String[]> onCreateLoader(int id, final Bundle args) {
+        Log.d(TAG, "LOADER IS CREATED");
+        return new AsyncTaskLoader<String[]>(this) {
+            String[] mWeatherData = null;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected String[] doInBackground(String... defWeather) {
-
-            if (defWeather.length == 0) {
-                return null;
+            @Override
+            protected void onStartLoading() {
+                if (mWeatherData != null) {
+                    Log.d(TAG, "DATA IS NOT NULL!!!!!!");
+                    deliverResult(mWeatherData);
+                } else {
+                    Log.d(TAG, "DATA IS NULL FORCE LOADER!!!!!!");
+                    progressBar.setVisibility(View.VISIBLE);
+                    forceLoad();
+                }
             }
 
-            String defaultWeather = defWeather[0];
-            String okHttpResponse = null;
-            String[] jsonResults = null;
-            try {
-                okHttpResponse = NetworkUtils.okHttpDataRetrieval(defaultWeather);
-                jsonResults = JsonUtils.getSimpleWeatherStringsFromJson(MainActivity.this,okHttpResponse);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
+            @Override
+            public String[] loadInBackground() {
+                Log.d(TAG, "LOADER IN BACKGROUND!!!!!!");
+                String weatherLocation = args.getString(WEATHER_LOCATION_FOR_LOADER);
+                if (weatherLocation==null || weatherLocation.isEmpty()){
+                    return null;
+                }
+                String okHttpResponse = null;
+                String[] jsonResults = null;
+                try {
+                    okHttpResponse = NetworkUtils.okHttpDataRetrieval(weatherLocation);
+                    jsonResults = JsonUtils.getSimpleWeatherStringsFromJson(MainActivity.this,okHttpResponse);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return jsonResults;
             }
-            return jsonResults;
+
+            @Override
+            public void deliverResult(String[] data) {
+                mWeatherData = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<String[]> loader, String[] data) {
+        Log.d(TAG, "LOADER IS DONE!!!!!");
+        progressBar.setVisibility(View.INVISIBLE);
+
+        if (data!=null){
+            displayWeather();
+            weatherRecyclerViewAdapter.setWeatherData(data);
+        }else{
+            errorMessage();
         }
 
-        @Override
-        protected void onPostExecute(String[] jsonResults) {
-            progressBar.setVisibility(View.INVISIBLE);
+    }
 
-            if (jsonResults!=null){
-                displayWeather();
-                weatherRecyclerViewAdapter.setWeatherData(jsonResults);
-            }else{
-                errorMessage();
-            }
-        }
+    @Override
+    public void onLoaderReset(Loader<String[]> loader) {
+
     }
 }
