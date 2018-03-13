@@ -1,6 +1,10 @@
 package com.markfeldman.theweatheroutside.data;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.markfeldman.theweatheroutside.R;
 
 public class WeatherPreferences {
 
@@ -72,8 +76,10 @@ public class WeatherPreferences {
      * "94043,USA" if SharedPreferences have not been implemented yet.
      */
     public static String getPreferredWeatherLocation(Context context) {
-        /** This will be implemented in a future lesson **/
-        return getDefaultWeatherLocation();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String preferenceLocation = sharedPreferences.getString(context.getString(R.string.location_key),
+                context.getString(R.string.preferences_default_value));
+        return preferenceLocation;
     }
 
     /**

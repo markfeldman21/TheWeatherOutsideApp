@@ -23,8 +23,8 @@
     <!--It's good to keep this short, so your launcher icon isn't displayed with "The greatest Wea"-->
     <!--or something similar.-->
     <string name="app_name">Sunshine</string>
-
     <string name="error_message">Data Not Retrieved</string>
+
 
     <!-- - - - - - - - - - - - - -->
     <!--Used by Menus-->
@@ -32,6 +32,27 @@
     <string name="menu_title">Refresh</string>
     <string name="menu_map_title">Show Map</string>
     <string name="menu_share">Share Weather!</string>
+    <string name="menu_settings">Settings</string>
+
+    <!-- - - - - - - - - - - - - -->
+    <!--Used by Preferences-->
+    <!-- - - - - - - - - - - - - -->
+    <string name="preferences_default_value">16 washburn ave, Newton, MA 02466</string>
+    <string name="location_key" translatable="false">location</string>
+    <string name="location_title">Location</string>
+
+    <string name="default_preference_units">Metric</string>
+    <string name="pref_units_key" translatable="false">units</string>
+    <string name="units_title">Units Of Measurement</string>
+    <string-array name="entry_options">
+        <item>Metric</item>
+        <item>Imperial</item>
+    </string-array>
+    
+    <string-array name="entry_values">
+        <item>metric</item>
+        <item>imperial</item>
+    </string-array>
 
 
 

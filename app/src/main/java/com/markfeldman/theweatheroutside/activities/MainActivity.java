@@ -1,8 +1,9 @@
 package com.markfeldman.theweatheroutside.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -29,7 +30,7 @@ import org.json.JSONException;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements WeatherRecyclerViewAdapter.WeatherRowClicked,
-        LoaderManager.LoaderCallbacks<String[]>{
+        LoaderManager.LoaderCallbacks<String[]>, SharedPreferences.OnSharedPreferenceChangeListener{
     private final String TAG = MainActivity.class.getSimpleName();
     private static final int LOADER_ID = 22;
     private static final String WEATHER_LOCATION_FOR_LOADER = "WEATHER LOCATION";
@@ -52,13 +53,14 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
         mRecyclerView.setHasFixedSize(true);
         weatherRecyclerViewAdapter = new WeatherRecyclerViewAdapter(this);
         mRecyclerView.setAdapter(weatherRecyclerViewAdapter);
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
         retrieveData();
     }
 
     private void retrieveData(){
-        String defaultLocation = WeatherPreferences.getPreferredWeatherLocation(this);
+        String preferenceLocation = WeatherPreferences.getPreferredWeatherLocation(this);
         Bundle queryBundle = new Bundle();
-        queryBundle.putString(WEATHER_LOCATION_FOR_LOADER,defaultLocation);
+        queryBundle.putString(WEATHER_LOCATION_FOR_LOADER,preferenceLocation);
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<String[]> loader = loaderManager.getLoader(LOADER_ID);
         if (loader==null){
@@ -106,13 +108,18 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
                 showMap();
                 break;
             }
+            case R.id.show_settings:{
+                Intent i = new Intent(this, SettingsActivity.class);
+                startActivity(i);
+                break;
+            }
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     public void showMap(){
-        String address ="32 washburn ave, newton, ma";
+        String address = WeatherPreferences.getPreferredWeatherLocation(this);
         String geoScheme = "geo:0,0?q=";
 
         Uri geoLocation = Uri.parse(geoScheme + address);
@@ -195,7 +202,21 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
     }
 
     @Override
+    protected void onDestroy() {
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+        super.onDestroy();
+    }
+
+    @Override
     public void onLoaderReset(Loader<String[]> loader) {
 
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.location_key))){
+            String setLocation = sharedPreferences.getString(getString(R.string.location_key), getString(R.string.preferences_default_value));
+            Toast.makeText(this,"RETURNED FROM PREF. VALUE SET AT " + setLocation,Toast.LENGTH_LONG).show();
+        }
     }
 }
