@@ -19,7 +19,7 @@ public final class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
     private static final String STATIC_WEATHER_URL =
-            "http://api.wunderground.com/api/f9d9bc3cc3834375/hourly";
+            "http://api.wunderground.com/api/f9d9bc3cc3834375/forecast10day";
 
     private static final String FORECAST_BASE_URL = STATIC_WEATHER_URL;
 
@@ -44,9 +44,6 @@ public final class NetworkUtils {
     final static String FORMAT_PARAM = "mode";
     final static String UNITS_PARAM = "units";
     final static String DAYS_PARAM = "cnt";
-
-    //TESTING GIT
-
 
     private static String URLStringbuildUrl(String locationQuery) {
         Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
