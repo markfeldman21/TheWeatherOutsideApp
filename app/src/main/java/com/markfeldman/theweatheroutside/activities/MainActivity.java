@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
     private ProgressBar progressBar;
     private RecyclerView mRecyclerView;
     private WeatherRecyclerViewAdapter weatherRecyclerViewAdapter;
+    private static boolean PREFERENCES_HAVE_BEEN_UPDATED = false;
 
 
     @Override
@@ -55,6 +56,16 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
         mRecyclerView.setAdapter(weatherRecyclerViewAdapter);
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
         retrieveData();
+    }
+
+    @Override
+    protected void onStart() {
+        if (PREFERENCES_HAVE_BEEN_UPDATED){
+            Log.d (TAG,"PREFERENCES CHANGED, LOADER RESET");
+            retrieveData();
+            PREFERENCES_HAVE_BEEN_UPDATED = false;
+        }
+        super.onStart();
     }
 
     private void retrieveData(){
@@ -214,9 +225,12 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        PREFERENCES_HAVE_BEEN_UPDATED = true;
         if (key.equals(getString(R.string.location_key))){
             String setLocation = sharedPreferences.getString(getString(R.string.location_key), getString(R.string.preferences_default_value));
-            Toast.makeText(this,"RETURNED FROM PREF. VALUE SET AT " + setLocation,Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Location Changed!",Toast.LENGTH_LONG).show();
+        }else if (key.equals(getString(R.string.pref_units_key))){
+            Toast.makeText(this,"Unit Changed!",Toast.LENGTH_LONG).show();
         }
     }
 }

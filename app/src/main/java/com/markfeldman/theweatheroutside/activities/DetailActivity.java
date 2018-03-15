@@ -60,6 +60,11 @@ public class DetailActivity extends AppCompatActivity {
                 shareMessage();
                 break;
             }
+            case R.id.show_settings:{
+                Intent i = new Intent(this, SettingsActivity.class);
+                startActivity(i);
+                break;
+            }
         }
 
         return super.onOptionsItemSelected(item);

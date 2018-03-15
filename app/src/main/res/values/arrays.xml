@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- - - - - - - - - - - - - -->
+    <!--Used by Preferences-->
+    <!-- - - - - - - - - - - - - -->
+    <string-array name="entry_options">
+        <item>@string/array_label_metric</item>
+        <item>@string/array_label_imperial</item>
+    </string-array>
+
+    <string-array name="entry_values">
+        <item>@string/array_value_metric</item>
+        <item>@string/array_value_imperial</item>
+    </string-array>
+
+</resources>
