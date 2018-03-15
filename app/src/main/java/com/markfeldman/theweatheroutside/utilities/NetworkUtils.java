@@ -18,11 +18,8 @@ public final class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    private static final String DYNAMIC_WEATHER_URL =
-            "https://andfun-weather.udacity.com/weather";
-
     private static final String STATIC_WEATHER_URL =
-            "https://andfun-weather.udacity.com/staticweather";
+            "http://api.wunderground.com/api/f9d9bc3cc3834375/hourly";
 
     private static final String FORECAST_BASE_URL = STATIC_WEATHER_URL;
 
@@ -41,19 +38,21 @@ public final class NetworkUtils {
     private static final int numDays = 14;
 
     final static String QUERY_PARAM = "q";
+    final static String FILE_TYPE = ".json";
     final static String LAT_PARAM = "lat";
     final static String LON_PARAM = "lon";
     final static String FORMAT_PARAM = "mode";
     final static String UNITS_PARAM = "units";
     final static String DAYS_PARAM = "cnt";
 
+    //TESTING GIT
+
 
     private static String URLStringbuildUrl(String locationQuery) {
         Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                .appendQueryParameter(QUERY_PARAM, locationQuery)
-                .appendQueryParameter(FORMAT_PARAM, format)
-                .appendQueryParameter(UNITS_PARAM, units)
-                .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
+                .appendPath(QUERY_PARAM)
+                .appendPath(locationQuery)
+                .appendPath(FILE_TYPE)
                 .build();
 
         URL url = null;
