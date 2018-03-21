@@ -161,10 +161,8 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
             @Override
             protected void onStartLoading() {
                 if (mWeatherData != null) {
-                    Log.d(TAG, "DATA IS NOT NULL!!!!!!");
                     deliverResult(mWeatherData);
                 } else {
-                    Log.d(TAG, "DATA IS NULL FORCE LOADER!!!!!!");
                     progressBar.setVisibility(View.VISIBLE);
                     forceLoad();
                 }
@@ -172,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
 
             @Override
             public String[] loadInBackground() {
-                Log.d(TAG, "LOADER IN BACKGROUND!!!!!!");
                 String weatherLocation = args.getString(WEATHER_LOCATION_FOR_LOADER);
                 if (weatherLocation==null || weatherLocation.isEmpty()){
                     return null;
@@ -180,8 +177,10 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
                 String okHttpResponse = null;
                 String[] jsonResults = null;
                 try {
+                    Log.d(TAG, "LOADER IN BACKGROUND!!!!!!");
                     okHttpResponse = NetworkUtils.okHttpDataRetrieval(weatherLocation);
                     jsonResults = JsonUtils.getSimpleWeatherStringsFromJson(MainActivity.this,okHttpResponse);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -192,6 +191,8 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
 
             @Override
             public void deliverResult(String[] data) {
+
+
                 mWeatherData = data;
                 super.deliverResult(data);
             }

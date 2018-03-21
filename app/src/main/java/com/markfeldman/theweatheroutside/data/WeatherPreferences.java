@@ -82,6 +82,13 @@ public class WeatherPreferences {
         return preferenceLocation;
     }
 
+    public static String getPreferredUnits(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String preferenceUnits = sharedPreferences.getString(context.getString(R.string.pref_units_key),
+                context.getString(R.string.default_preference_units));
+        return preferenceUnits;
+    }
+
     /**
      * Returns true if the user has selected metric temperature display.
      *
