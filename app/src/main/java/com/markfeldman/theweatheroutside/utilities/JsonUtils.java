@@ -2,17 +2,11 @@ package com.markfeldman.theweatheroutside.utilities;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.nfc.Tag;
-import android.preference.PreferenceManager;
-import android.util.Log;
-
 import com.markfeldman.theweatheroutside.data.WeatherPreferences;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.HttpURLConnection;
 
 public final class JsonUtils {
 
@@ -23,7 +17,18 @@ public final class JsonUtils {
         final String FORECAST_OBJECT = "forecast";
         final String SIMPLE_FORECAST = "simpleforecast";
         final String SIMPLE_FORECAST_ARRAY = "forecastday";
+        final String DATE_OBJECT = "date";
+        final String DAY_HIGH = "high";
+        final String WEEKDAY = "weekday";
+        final String MONTH = "monthname";
+        final String YEAR = "year";
+        final String CELCIUS = "celsius";
+        final String FAHREN = "fahrenheit";
+        final String CONDITIONS = "conditions";
+        final String HUMIDITY = "avehumidity";
+        final String ICON_URL = "icon_url";
         String selectedPrefUnits = WeatherPreferences.getPreferredUnits(context);
+
 
         JSONObject overallResponse = new JSONObject(forecastJsonStr);
         JSONObject forecast = overallResponse.getJSONObject(FORECAST_OBJECT);
@@ -34,26 +39,36 @@ public final class JsonUtils {
 
         for (int i = 0; i < simpleForecastArray.length(); i++){
             String day;
-            String shortDescription;
+            String month;
+            String year;
+            String humidity;
+            String iconURL;
+            String conditions;
             String highTempCelcius;
             String highTempF;
             String finalUnits = null;
 
-            JSONObject simpleForecastIndividual = simpleForecastArray.getJSONObject(i);
-            JSONObject simpleForecastDate = simpleForecastIndividual.getJSONObject("date");
-            JSONObject simpleForecasteHigh = simpleForecastIndividual.getJSONObject("high");
 
-            day = simpleForecastDate.getString("weekday");
-            highTempCelcius = simpleForecasteHigh.getString("celsius");
-            highTempF = simpleForecasteHigh.getString("fahrenheit");
-            shortDescription = simpleForecastIndividual.getString("conditions");
+            JSONObject simpleForecastIndividual = simpleForecastArray.getJSONObject(i);
+            JSONObject simpleForecastDate = simpleForecastIndividual.getJSONObject(DATE_OBJECT);
+            JSONObject simpleForecasteHigh = simpleForecastIndividual.getJSONObject(DAY_HIGH);
+
+            day = simpleForecastDate.getString(WEEKDAY);
+            month = simpleForecastDate.getString(MONTH);
+            year = simpleForecastDate.getString(YEAR);
+            highTempCelcius = simpleForecasteHigh.getString(CELCIUS);
+            highTempF = simpleForecasteHigh.getString(FAHREN);
+            conditions = simpleForecastIndividual.getString(CONDITIONS);
+            humidity = simpleForecastIndividual.getString(HUMIDITY);
+            iconURL = simpleForecastIndividual.getString(ICON_URL);
 
             if (selectedPrefUnits.equals("imperial")){
                 finalUnits = highTempCelcius;
             }else if (selectedPrefUnits.equals("metric")){
                 finalUnits = highTempF;
             }
-            parsedWeather[i] = day + " - " + shortDescription + " - " + finalUnits;
+            parsedWeather[i] = month + " " + day + " " +  year + " - " + conditions +
+                    " - " + finalUnits + ". Humidity = " + humidity + ". Icon:  " + iconURL;
         }
 
         return parsedWeather;
