@@ -20,6 +20,7 @@ public final class JsonUtils {
         final String DATE_OBJECT = "date";
         final String DAY_HIGH = "high";
         final String WEEKDAY = "weekday";
+        final String DAY_NUMBER = "day";
         final String MONTH = "monthname";
         final String YEAR = "year";
         final String CELCIUS = "celsius";
@@ -28,7 +29,6 @@ public final class JsonUtils {
         final String HUMIDITY = "avehumidity";
         final String ICON_URL = "icon_url";
         String selectedPrefUnits = WeatherPreferences.getPreferredUnits(context);
-
 
         JSONObject overallResponse = new JSONObject(forecastJsonStr);
         JSONObject forecast = overallResponse.getJSONObject(FORECAST_OBJECT);
@@ -39,8 +39,10 @@ public final class JsonUtils {
 
         for (int i = 0; i < simpleForecastArray.length(); i++){
             String day;
+            String dayNumber;
             String month;
             String year;
+            String finalDate;
             String humidity;
             String iconURL;
             String conditions;
@@ -56,18 +58,20 @@ public final class JsonUtils {
             day = simpleForecastDate.getString(WEEKDAY);
             month = simpleForecastDate.getString(MONTH);
             year = simpleForecastDate.getString(YEAR);
+            dayNumber = simpleForecastDate.getString(DAY_NUMBER);
             highTempCelcius = simpleForecasteHigh.getString(CELCIUS);
             highTempF = simpleForecasteHigh.getString(FAHREN);
             conditions = simpleForecastIndividual.getString(CONDITIONS);
             humidity = simpleForecastIndividual.getString(HUMIDITY);
             iconURL = simpleForecastIndividual.getString(ICON_URL);
+            finalDate = month + " " + dayNumber + " " + year;
 
             if (selectedPrefUnits.equals("imperial")){
                 finalUnits = highTempCelcius;
             }else if (selectedPrefUnits.equals("metric")){
                 finalUnits = highTempF;
             }
-            parsedWeather[i] = month + " " + day + " " +  year + " - " + conditions +
+            parsedWeather[i] = finalDate + " - " + conditions +
                     " - " + finalUnits + ". Humidity = " + humidity + ". Icon:  " + iconURL;
         }
 
