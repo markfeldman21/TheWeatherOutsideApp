@@ -2,6 +2,10 @@ package com.markfeldman.theweatheroutside.utilities;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
+
+import com.markfeldman.theweatheroutside.data.WeatherContract;
+import com.markfeldman.theweatheroutside.data.WeatherDatabase;
 import com.markfeldman.theweatheroutside.data.WeatherPreferences;
 
 import org.json.JSONArray;
@@ -11,6 +15,7 @@ import org.json.JSONObject;
 public final class JsonUtils {
 
     private static String TAG = JsonUtils.class.getSimpleName();
+    private static ContentValues[] contentValuesArray;
 
     public static String[] getSimpleWeatherStringsFromJson(Context context, String forecastJsonStr)
             throws JSONException {
@@ -36,6 +41,7 @@ public final class JsonUtils {
         JSONArray simpleForecastArray = simpleForecast.getJSONArray(SIMPLE_FORECAST_ARRAY);
 
         String [] parsedWeather = new String [simpleForecastArray.length()];
+        contentValuesArray = new ContentValues[simpleForecastArray.length()];
 
         for (int i = 0; i < simpleForecastArray.length(); i++){
             String day;
@@ -49,7 +55,7 @@ public final class JsonUtils {
             String highTempCelcius;
             String highTempF;
             String finalUnits = null;
-
+            ContentValues cv = new ContentValues();
 
             JSONObject simpleForecastIndividual = simpleForecastArray.getJSONObject(i);
             JSONObject simpleForecastDate = simpleForecastIndividual.getJSONObject(DATE_OBJECT);
@@ -73,7 +79,23 @@ public final class JsonUtils {
             }
             parsedWeather[i] = finalDate + " - " + conditions +
                     " - " + finalUnits + ". Humidity = " + humidity + ". Icon:  " + iconURL;
+
+            cv.put(WeatherContract.WeatherData.COLUMN_DATE, month + " " + dayNumber + " " + year);
+            cv.put(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK, day);
+            cv.put(WeatherContract.WeatherData.COLUMN_HUMIDITY, humidity);
+            cv.put(WeatherContract.WeatherData.COLUMN_ICON_URL, iconURL);
+            cv.put(WeatherContract.WeatherData.COLUMN_CONDITIONS,conditions);
+            cv.put(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC,highTempCelcius);
+            cv.put(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF, highTempF);
+
+            contentValuesArray[i] = cv;
         }
+
+        //Log.d(TAG, "CONTTENT ==== " + contentValuesArray[0].getAsString(WeatherContract.WeatherData.COLUMN_DATE));
+
+        WeatherDatabase weatherDatabase = new WeatherDatabase(context);
+        weatherDatabase.openWritableDatabase();
+        weatherDatabase.insertAllRows(contentValuesArray);
 
         return parsedWeather;
 

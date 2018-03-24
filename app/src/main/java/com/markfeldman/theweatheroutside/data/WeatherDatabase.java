@@ -1,10 +1,97 @@
 package com.markfeldman.theweatheroutside.data;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class WeatherDatabase {
+    private Context context;
+    private WeatherDatabaseHelper weatherDatabaseHelper;
+    private SQLiteDatabase mDb;
+
+    public WeatherDatabase(Context context){
+        this.context = context;
+        weatherDatabaseHelper = new WeatherDatabaseHelper(context);
+
+    }
+
+    public SQLiteDatabase openWritableDatabase(){
+        mDb = weatherDatabaseHelper.getWritableDatabase();
+        return mDb;
+    }
+
+    public SQLiteDatabase openReadableDatabase(){
+        mDb = weatherDatabaseHelper.getReadableDatabase();
+        return mDb;
+    }
+
+    public void close(){
+        mDb.close();
+    }
+
+    public void beginTransaction(){
+        mDb.beginTransaction();
+    }
+
+    public void transactionSuccesful(){
+        mDb.setTransactionSuccessful();
+    }
+
+    public void endTransaction(){
+        mDb.endTransaction();
+    }
+
+    public Cursor getAllRows(){
+        return mDb.query(WeatherContract.WeatherData.TABLE_NAME,null,null,null,null,null,null);
+    }
+
+    public Cursor getSpecificRow(String tableName,String[] projection,String selection,String[] rowID){
+        Cursor c = mDb.query(tableName,projection,selection,rowID,null,null,null);
+        if (c!=null){
+            c.moveToFirst();
+        }
+        return c;
+    }
+
+    public void deleteTable(){
+        mDb.delete(WeatherContract.WeatherData.TABLE_NAME,null,null);
+    }
+
+    public void deleteAllRows(){
+        Cursor c = getAllRows();
+        int rowID = c.getColumnIndexOrThrow(WeatherContract.WeatherData._ID);
+        String idToDelete = Integer.toString(rowID);
+        String[]args = {idToDelete};
+        if (c.moveToFirst()){
+            do{
+                mDb.delete(WeatherContract.WeatherData.TABLE_NAME," _id=?",args);
+            }while(c.moveToNext());
+        }
+    }
+
+    //SQLite return statement returns long containing id of inserted Row
+    public long insertRow(String table, ContentValues cv){
+        return mDb.insert(table, null,cv);
+    }
+
+    public void insertAllRows(ContentValues[] values){
+        int rowsInserted = 0;
+        for (ContentValues value : values){
+            long id = insertRow(WeatherContract.WeatherData.TABLE_NAME,value);
+            if (id!=-1){
+                rowsInserted++;
+            }
+        }
+        Log.d("DATABASE", "INSIDE DATABASE INSERTED THIS MANY ROWS = " + rowsInserted);
+    }
+
+
+
+
+
 
     public static class WeatherDatabaseHelper extends SQLiteOpenHelper{
         private static final String DATABASE_NAME = "weather.db";
@@ -17,10 +104,10 @@ public class WeatherDatabase {
                 WeatherContract.WeatherData.COLUMN_ICON_URL  + " TEXT NOT NULL, " +
                 WeatherContract.WeatherData.COLUMN_CONDITIONS  + " TEXT NOT NULL, " +
                 WeatherContract.WeatherData.COLUMN_HIGH_TEMPC  + " TEXT NOT NULL, " +
-                WeatherContract.WeatherData.COLUMN_HIGH_TEMPF  + " TEXT NOT NULL, " +
+                WeatherContract.WeatherData.COLUMN_HIGH_TEMPF  + " TEXT NOT NULL " +
                 ");";
 
-        public WeatherDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+        public WeatherDatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
