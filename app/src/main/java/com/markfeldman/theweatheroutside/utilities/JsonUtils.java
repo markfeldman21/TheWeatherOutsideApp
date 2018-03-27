@@ -17,7 +17,7 @@ public final class JsonUtils {
     private static String TAG = JsonUtils.class.getSimpleName();
     private static ContentValues[] contentValuesArray;
 
-    public static String[] getSimpleWeatherStringsFromJson(Context context, String forecastJsonStr)
+    public static ContentValues[] getSimpleWeatherStringsFromJson(Context context, String forecastJsonStr)
             throws JSONException {
         final String FORECAST_OBJECT = "forecast";
         final String SIMPLE_FORECAST = "simpleforecast";
@@ -77,8 +77,6 @@ public final class JsonUtils {
             }else if (selectedPrefUnits.equals("metric")){
                 finalUnits = highTempF;
             }
-            parsedWeather[i] = finalDate + " - " + conditions +
-                    " - " + finalUnits + ". Humidity = " + humidity + ". Icon:  " + iconURL;
 
             cv.put(WeatherContract.WeatherData.COLUMN_DATE, month + " " + dayNumber + " " + year);
             cv.put(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK, day);
@@ -91,13 +89,7 @@ public final class JsonUtils {
             contentValuesArray[i] = cv;
         }
 
-        //Log.d(TAG, "CONTTENT ==== " + contentValuesArray[0].getAsString(WeatherContract.WeatherData.COLUMN_DATE));
-
-        WeatherDatabase weatherDatabase = new WeatherDatabase(context);
-        weatherDatabase.openWritableDatabase();
-        weatherDatabase.insertAllRows(contentValuesArray);
-
-        return parsedWeather;
+        return contentValuesArray;
 
     }
 

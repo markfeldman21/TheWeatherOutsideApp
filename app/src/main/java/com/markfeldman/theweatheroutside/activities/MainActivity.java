@@ -1,7 +1,9 @@
 package com.markfeldman.theweatheroutside.activities;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.markfeldman.theweatheroutside.R;
+import com.markfeldman.theweatheroutside.data.WeatherDatabase;
 import com.markfeldman.theweatheroutside.data.WeatherPreferences;
 import com.markfeldman.theweatheroutside.utilities.JsonUtils;
 import com.markfeldman.theweatheroutside.utilities.NetworkUtils;
@@ -30,9 +33,10 @@ import org.json.JSONException;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements WeatherRecyclerViewAdapter.WeatherRowClicked,
-        LoaderManager.LoaderCallbacks<String[]>, SharedPreferences.OnSharedPreferenceChangeListener{
+        LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener{
     private final String TAG = MainActivity.class.getSimpleName();
     private static final int LOADER_ID = 22;
+    private WeatherDatabase weatherDatabase = new WeatherDatabase(this);
     private static final String WEATHER_LOCATION_FOR_LOADER = "WEATHER LOCATION";
     private TextView errorMessage;
     private ProgressBar progressBar;
@@ -45,9 +49,9 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        errorMessage = (TextView)findViewById(R.id.tv_error_message_display);
-        progressBar = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-        mRecyclerView = (RecyclerView) findViewById(R.id.weather_recyclerView);
+        errorMessage = findViewById(R.id.tv_error_message_display);
+        progressBar = findViewById(R.id.pb_loading_indicator);
+        mRecyclerView = findViewById(R.id.weather_recyclerView);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -153,15 +157,15 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
     }
 
     @Override
-    public Loader<String[]> onCreateLoader(int id, final Bundle args) {
+    public Loader<Cursor> onCreateLoader(int id, final Bundle args) {
         Log.d(TAG, "LOADER IS CREATED");
-        return new AsyncTaskLoader<String[]>(this) {
-            String[] mWeatherData = null;
+        return new AsyncTaskLoader<Cursor>(this) {
+            Cursor mCursor = null;
 
             @Override
             protected void onStartLoading() {
-                if (mWeatherData != null) {
-                    deliverResult(mWeatherData);
+                if (mCursor != null) {
+                    deliverResult(mCursor);
                 } else {
                     progressBar.setVisibility(View.VISIBLE);
                     forceLoad();
@@ -169,38 +173,47 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
             }
 
             @Override
-            public String[] loadInBackground() {
+            public Cursor loadInBackground() {
                 String weatherLocation = args.getString(WEATHER_LOCATION_FOR_LOADER);
                 if (weatherLocation==null || weatherLocation.isEmpty()){
                     return null;
                 }
                 String okHttpResponse = null;
-                String[] jsonResults = null;
+                ContentValues[] jsonResults = null;
                 try {
                     Log.d(TAG, "LOADER IN BACKGROUND!!!!!!");
                     okHttpResponse = NetworkUtils.okHttpDataRetrieval(weatherLocation);
                     jsonResults = JsonUtils.getSimpleWeatherStringsFromJson(MainActivity.this,okHttpResponse);
+                    weatherDatabase.openWritableDatabase();
+                    weatherDatabase.deleteAllRows();
+                    weatherDatabase.insertAllRows(jsonResults);
+                    mCursor = weatherDatabase.getAllRows();
+
+                    if (mCursor!=null){
+                        mCursor.moveToFirst();
+                    }else{
+                        Log.d(TAG, "CURSOR IS NULL IN MAIN");
+                    }
+                    weatherDatabase.close();
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                return jsonResults;
+                return mCursor;
             }
 
             @Override
-            public void deliverResult(String[] data) {
-
-
-                mWeatherData = data;
+            public void deliverResult(Cursor data) {
+                mCursor = data;
                 super.deliverResult(data);
             }
         };
     }
 
     @Override
-    public void onLoadFinished(Loader<String[]> loader, String[] data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.d(TAG, "LOADER IS DONE!!!!!");
         progressBar.setVisibility(View.INVISIBLE);
 
@@ -220,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
     }
 
     @Override
-    public void onLoaderReset(Loader<String[]> loader) {
+    public void onLoaderReset(Loader<Cursor> loader) {
 
     }
 

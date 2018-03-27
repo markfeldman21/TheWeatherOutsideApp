@@ -1,16 +1,18 @@
 package com.markfeldman.theweatheroutside.utilities;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.markfeldman.theweatheroutside.R;
+import com.markfeldman.theweatheroutside.data.WeatherContract;
 
 public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecyclerViewAdapter.WeatherAdapterViewHolder> {
     private final String TAG = WeatherRecyclerViewAdapter.class.getSimpleName();
-    private String[]  jsonResults;
+    private Cursor mCursor;
     private WeatherRowClicked weatherRowClickedListener;
 
     public interface WeatherRowClicked{
@@ -35,21 +37,30 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
 
     @Override
     public void onBindViewHolder(WeatherAdapterViewHolder holder, int position) {
-        String weatherData = jsonResults[position];
-        holder.weatherData.setText(weatherData);
+        mCursor.moveToPosition(position);
+        String weatherDate = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_DATE));
+        String weatherDay = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK));
+        String humidity = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HUMIDITY));
+        String iconURL = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_ICON_URL));
+        String conditions = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_CONDITIONS));
+        String highCelcius = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC));
+        String highFah = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));
+
+        holder.weatherData.setText(weatherDay + " " + weatherDate + " " + conditions + ". High Of " + highCelcius
+        + "/" + highFah);
 
     }
 
     @Override
     public int getItemCount() {
-        if (jsonResults==null){
+        if (mCursor==null){
             return 0;
         }
-        return jsonResults.length;
+        return mCursor.getCount();
     }
 
-    public void setWeatherData(String[] weatherData) {
-        jsonResults = weatherData;
+    public void setWeatherData(Cursor weatherData) {
+        mCursor = weatherData;
         notifyDataSetChanged();
     }
 
@@ -58,18 +69,27 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
 
 
     class WeatherAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public TextView weatherData;
+        private TextView weatherData;
 
-        public WeatherAdapterViewHolder(View itemView) {
+        private WeatherAdapterViewHolder(View itemView) {
             super(itemView);
-            weatherData = (TextView) itemView.findViewById(R.id.weather_data);
+            weatherData = itemView.findViewById(R.id.weather_data);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            weatherRowClickedListener.onClicked(jsonResults[adapterPosition]);
+            mCursor.moveToPosition(adapterPosition);
+            String weatherDate = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_DATE));
+            String weatherDay = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK));
+            String humidity = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HUMIDITY));
+            String iconURL = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_ICON_URL));
+            String conditions = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_CONDITIONS));
+            String highCelcius = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC));
+            String highFah = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));
+            weatherRowClickedListener.onClicked(weatherDay + " " + weatherDate + " " + conditions + ". High Of " + highCelcius
+                    + "/" + highFah);
         }
     }
 }

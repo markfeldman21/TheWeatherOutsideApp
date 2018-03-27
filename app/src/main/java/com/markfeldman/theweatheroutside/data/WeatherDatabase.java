@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class WeatherDatabase {
+    private final String TAG = WeatherDatabase.class.getSimpleName();
     private Context context;
     private WeatherDatabaseHelper weatherDatabaseHelper;
     private SQLiteDatabase mDb;
@@ -18,14 +19,12 @@ public class WeatherDatabase {
 
     }
 
-    public SQLiteDatabase openWritableDatabase(){
+    public void openWritableDatabase(){
         mDb = weatherDatabaseHelper.getWritableDatabase();
-        return mDb;
     }
 
-    public SQLiteDatabase openReadableDatabase(){
+    public void openReadableDatabase(){
         mDb = weatherDatabaseHelper.getReadableDatabase();
-        return mDb;
     }
 
     public void close(){
@@ -69,6 +68,9 @@ public class WeatherDatabase {
             do{
                 mDb.delete(WeatherContract.WeatherData.TABLE_NAME," _id=?",args);
             }while(c.moveToNext());
+            Log.d(TAG,"ALL ROWS DELETED");
+        }else {
+            Log.d(TAG,"NOTHING TO DELETE BEFORE INSERTION");
         }
     }
 
@@ -107,7 +109,7 @@ public class WeatherDatabase {
                 WeatherContract.WeatherData.COLUMN_HIGH_TEMPF  + " TEXT NOT NULL " +
                 ");";
 
-        public WeatherDatabaseHelper(Context context) {
+        private WeatherDatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
