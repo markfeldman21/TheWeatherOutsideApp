@@ -91,13 +91,9 @@ public class WeatherDatabase {
     }
 
 
-
-
-
-
     public static class WeatherDatabaseHelper extends SQLiteOpenHelper{
         private static final String DATABASE_NAME = "weather.db";
-        private static final int DATABASE_VERSION = 1;
+        private static final int DATABASE_VERSION = 2;
         private final static String CREATE_DATABASE = "CREATE TABLE " + WeatherContract.WeatherData.TABLE_NAME +
                 " ("+ WeatherContract.WeatherData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 WeatherContract.WeatherData.COLUMN_DATE + " TEXT NOT NULL, " +
@@ -106,8 +102,8 @@ public class WeatherDatabase {
                 WeatherContract.WeatherData.COLUMN_ICON_URL  + " TEXT NOT NULL, " +
                 WeatherContract.WeatherData.COLUMN_CONDITIONS  + " TEXT NOT NULL, " +
                 WeatherContract.WeatherData.COLUMN_HIGH_TEMPC  + " TEXT NOT NULL, " +
-                WeatherContract.WeatherData.COLUMN_HIGH_TEMPF  + " TEXT NOT NULL " +
-                ");";
+                WeatherContract.WeatherData.COLUMN_HIGH_TEMPF  + " TEXT NOT NULL, " +
+                " UNIQUE (" + WeatherContract.WeatherData.COLUMN_DATE + ") ON CONFLICT REPLACE);";
 
         private WeatherDatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
