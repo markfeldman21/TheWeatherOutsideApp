@@ -11,6 +11,7 @@ public class WeatherContract {
     public static final String PATH_TASKS = "weather_table";
     private WeatherContract(){};
 
+
     //Inner Class For Each Seperate Table
     public static class WeatherData implements BaseColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_TASKS).build();
