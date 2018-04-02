@@ -27,6 +27,10 @@
                 android:value=".activities.MainActivity"/>
         </activity>
         <activity android:name=".activities.SettingsActivity"/>
+        <provider
+            android:authorities="com.markfeldman.theweatheroutside"
+            android:name=".data.WeatherContentProvider"
+            android:exported="true"/>
     </application>
 
 </manifest>

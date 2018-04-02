@@ -194,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
                     }else{
                         Log.d(TAG, "CURSOR IS NULL IN MAIN");
                     }
-                    weatherDatabase.close();
 
                 } catch (IOException e) {
                     e.printStackTrace();
