@@ -2,13 +2,27 @@ package com.markfeldman.theweatheroutside.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 public class WeatherContentProvider extends ContentProvider {
+    private static final int WHOLE_WEATHER = 100;
+    private static final int WEATHER_ID = 101;
     private WeatherDatabase weatherDatabase;
+    private static UriMatcher sUriMatcher = buildUriMatcher();
+
+
+    public static UriMatcher buildUriMatcher (){
+        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        uriMatcher.addURI(WeatherContract.CONTENT_AUTHORITY,WeatherContract.PATH_TASKS,WHOLE_WEATHER);
+        uriMatcher.addURI(WeatherContract.CONTENT_AUTHORITY,WeatherContract.PATH_TASKS + "/#",WEATHER_ID);
+        return uriMatcher;
+    }
 
     @Override
     public boolean onCreate() {
@@ -19,7 +33,29 @@ public class WeatherContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        return null;
+        weatherDatabase.openReadableDatabase();
+        Cursor mCursor;
+
+        int match = sUriMatcher.match(uri);
+
+        switch (match){
+            case WHOLE_WEATHER:{
+                mCursor = weatherDatabase.getAllRows();
+                break;
+            }
+            case WEATHER_ID:{
+                Log.d("CONTENT", "WE ARE INSIDE THE ID NOW");
+                mCursor = weatherDatabase.getAllRows();
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException("UNKNOWN URI IN PROVIDER QUERY METHOD");
+
+        }
+        mCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+
+        return mCursor;
     }
 
     @Nullable
@@ -35,7 +71,44 @@ public class WeatherContentProvider extends ContentProvider {
     }
 
     @Override
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        weatherDatabase.openWritableDatabase();
+        int match = sUriMatcher.match(uri);
+        int numberOfRowsInserted =0;
+        Log.d("CONTENT PROVIDER", "INSIDE BULK INSERT!!!" + " " + match + " " +uri);
+
+        switch (match){
+            case WHOLE_WEATHER: {
+
+                weatherDatabase.beginTransaction();
+                try{
+                    for (ContentValues cv: values){
+                        long id = weatherDatabase.insertRow(WeatherContract.WeatherData.TABLE_NAME,cv);
+                        if (id!=-1){
+                            numberOfRowsInserted++;
+                        }else{
+                            throw new android.database.SQLException("Failed To Insert Row");
+                        }
+                    }
+                    weatherDatabase.transactionSuccesful();
+                }finally {
+                    weatherDatabase.endTransaction();
+                    weatherDatabase.close();
+                }
+                if (numberOfRowsInserted>0){
+                    Log.d("CONTENT PROVIDER", "NUMBER OF ROWS ==== " + numberOfRowsInserted);
+                    getContext().getContentResolver().notifyChange(uri,null);
+                }
+            }
+            default:
+                return super.bulkInsert(uri, values);
+        }
+    }
+
+    @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+        weatherDatabase.openWritableDatabase();
+        weatherDatabase.deleteTable();
         return 0;
     }
 
