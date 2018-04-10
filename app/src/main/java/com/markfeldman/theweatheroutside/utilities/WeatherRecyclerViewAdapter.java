@@ -16,7 +16,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
     private WeatherRowClicked weatherRowClickedListener;
 
     public interface WeatherRowClicked{
-        void onClicked(String weather);
+        void onClicked(String weatherID);
     }
 
     public WeatherRecyclerViewAdapter(WeatherRowClicked weatherRowClickedListener){
@@ -81,15 +81,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
-            String weatherDate = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_DATE));
-            String weatherDay = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK));
-            String humidity = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HUMIDITY));
-            String iconURL = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_ICON_URL));
-            String conditions = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_CONDITIONS));
-            String highCelcius = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC));
-            String highFah = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));
-            weatherRowClickedListener.onClicked(weatherDay + " " + weatherDate + " " + conditions + ". High Of " + highCelcius
-                    + "/" + highFah);
+            weatherRowClickedListener.onClicked(mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData._ID)));
         }
     }
 }

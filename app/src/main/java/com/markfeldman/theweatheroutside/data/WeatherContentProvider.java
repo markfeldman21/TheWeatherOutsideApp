@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -44,8 +43,7 @@ public class WeatherContentProvider extends ContentProvider {
                 break;
             }
             case WEATHER_ID:{
-                Log.d("CONTENT", "WE ARE INSIDE THE ID NOW");
-                mCursor = weatherDatabase.getAllRows();
+                mCursor = weatherDatabase.getSpecificRow(WeatherContract.WeatherData.TABLE_NAME,projection,selection,selectionArgs);
                 break;
             }
             default:
@@ -96,7 +94,6 @@ public class WeatherContentProvider extends ContentProvider {
                     weatherDatabase.close();
                 }
                 if (numberOfRowsInserted>0){
-                    Log.d("CONTENT PROVIDER", "NUMBER OF ROWS ==== " + numberOfRowsInserted);
                     getContext().getContentResolver().notifyChange(uri,null);
                 }
             }

@@ -6,8 +6,8 @@ import android.provider.BaseColumns;
 import java.net.URI;
 
 public class WeatherContract {
-    public static final String AUTHORITY = "com.markfeldman.theweatheroutside";
-    public  static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    public static final String CONTENT_AUTHORITY = "com.markfeldman.theweatheroutside";
+    public  static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_TASKS = "weather_table";
     private WeatherContract(){};
 

@@ -1,5 +1,6 @@
 package com.markfeldman.theweatheroutside.activities;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.markfeldman.theweatheroutside.R;
+import com.markfeldman.theweatheroutside.data.WeatherContract;
 import com.markfeldman.theweatheroutside.data.WeatherDatabase;
 import com.markfeldman.theweatheroutside.data.WeatherPreferences;
 import com.markfeldman.theweatheroutside.utilities.JsonUtils;
@@ -35,6 +37,7 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity implements WeatherRecyclerViewAdapter.WeatherRowClicked,
         LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener{
     private final String TAG = MainActivity.class.getSimpleName();
+    private final String BUNDLE_EXTRA_INT_ID = "Bundle Extra";
     private static final int LOADER_ID = 22;
     private WeatherDatabase weatherDatabase = new WeatherDatabase(this);
     private static final String WEATHER_LOCATION_FOR_LOADER = "WEATHER LOCATION";
@@ -43,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
     private RecyclerView mRecyclerView;
     private WeatherRecyclerViewAdapter weatherRecyclerViewAdapter;
     private static boolean PREFERENCES_HAVE_BEEN_UPDATED = false;
+
+    private String[] projection = {WeatherContract.WeatherData.COLUMN_CONDITIONS,WeatherContract.WeatherData.COLUMN_DATE};
 
 
     @Override
@@ -150,9 +155,9 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
     }
 
     @Override
-    public void onClicked(String weather) {
+    public void onClicked(String weatherID) {
         Intent showDetailActivity = new Intent(MainActivity.this, DetailActivity.class);
-        showDetailActivity.putExtra(Intent.EXTRA_TEXT,weather);
+        showDetailActivity.putExtra(BUNDLE_EXTRA_INT_ID,weatherID);
         startActivity(showDetailActivity);
     }
 
@@ -172,8 +177,10 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
                 }
             }
 
+            @SuppressLint("NewApi")
             @Override
             public Cursor loadInBackground() {
+                Uri weatherQueryUri = WeatherContract.WeatherData.CONTENT_URI;
                 String weatherLocation = args.getString(WEATHER_LOCATION_FOR_LOADER);
                 if (weatherLocation==null || weatherLocation.isEmpty()){
                     return null;
@@ -184,10 +191,11 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
                     Log.d(TAG, "LOADER IN BACKGROUND!!!!!!");
                     okHttpResponse = NetworkUtils.okHttpDataRetrieval(weatherLocation);
                     jsonResults = JsonUtils.getSimpleWeatherStringsFromJson(MainActivity.this,okHttpResponse);
-                    weatherDatabase.openWritableDatabase();
-                    weatherDatabase.deleteAllRows();
-                    weatherDatabase.insertAllRows(jsonResults);
-                    mCursor = weatherDatabase.getAllRows();
+                    getContentResolver().delete(weatherQueryUri,null,null);
+                    getContentResolver().bulkInsert(weatherQueryUri,jsonResults);
+
+                    mCursor = getContentResolver().query(weatherQueryUri,null,null,null,null,null);
+
 
                     if (mCursor!=null){
                         mCursor.moveToFirst();
