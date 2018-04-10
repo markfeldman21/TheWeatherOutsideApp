@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -161,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
         startActivity(showDetailActivity);
     }
 
+
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, final Bundle args) {
         Log.d(TAG, "LOADER IS CREATED");
@@ -234,15 +237,44 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
     }
 
     @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+
+    /*
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        Uri weatherQueryUri = WeatherContract.WeatherData.CONTENT_URI;
+
+
+
+        return new CursorLoader(this,weatherQueryUri,null,null,null,null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d(TAG, "LOADER IS DONE!!!!!");
+        progressBar.setVisibility(View.INVISIBLE);
+
+        if (data!=null){
+            displayWeather();
+            weatherRecyclerViewAdapter.setWeatherData(data);
+        }else{
+            errorMessage();
+        }
+
+    }
+
+    */
+
+    @Override
     protected void onDestroy() {
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
         super.onDestroy();
     }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
