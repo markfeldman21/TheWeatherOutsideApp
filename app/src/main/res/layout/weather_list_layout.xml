@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/weather_icon"
+        app:layout_constraintRight_toLeftOf="@id/weather_data"
+        app:layout_constraintLeft_toRightOf="parent"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
+
     <TextView
         android:id="@+id/weather_data"
+        app:layout_constraintLeft_toRightOf="@id/weather_icon"
+        android:textStyle="bold"
         style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <!--This View serves as a visual divider between list items-->
+
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:background="#dadada"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp" />
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>
