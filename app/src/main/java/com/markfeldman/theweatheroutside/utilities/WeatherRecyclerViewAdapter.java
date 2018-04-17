@@ -6,9 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.markfeldman.theweatheroutside.R;
 import com.markfeldman.theweatheroutside.data.WeatherContract;
+import com.squareup.picasso.Picasso;
+
 
 public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecyclerViewAdapter.WeatherAdapterViewHolder> {
     private final String TAG = WeatherRecyclerViewAdapter.class.getSimpleName();
@@ -21,6 +24,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
 
     public WeatherRecyclerViewAdapter(WeatherRowClicked weatherRowClickedListener){
         this.weatherRowClickedListener = weatherRowClickedListener;
+
     }
 
 
@@ -45,6 +49,8 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         String conditions = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_CONDITIONS));
         String highCelcius = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC));
         String highFah = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));
+        Context context = holder.weatherImage.getContext();
+        Picasso.get().load(iconURL).into(holder.weatherImage);
 
         holder.weatherData.setText(weatherDay + " " + weatherDate + " " + conditions + ". High Of " + highCelcius
         + "/" + highFah);
@@ -70,9 +76,11 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
 
     class WeatherAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView weatherData;
+        private ImageView weatherImage;
 
         private WeatherAdapterViewHolder(View itemView) {
             super(itemView);
+            weatherImage = itemView.findViewById(R.id.weather_icon);
             weatherData = itemView.findViewById(R.id.weather_data);
             itemView.setOnClickListener(this);
         }

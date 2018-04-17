@@ -6,10 +6,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.markfeldman.theweatheroutside.activities.DetailActivity">
 
+    <ImageView
+        android:id="@+id/detail_weather_image"
+        android:src="@drawable/art_clear"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:layout_constraintLeft_toRightOf="parent"
+       />
+
     <TextView
         android:id="@+id/retrieved_data"
+        app:layout_constraintLeft_toRightOf="@id/detail_weather_image"
+
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
 </android.support.constraint.ConstraintLayout>

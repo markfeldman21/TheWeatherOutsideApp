@@ -9,7 +9,7 @@
         app:layout_constraintRight_toLeftOf="@id/weather_data"
         app:layout_constraintLeft_toRightOf="parent"
         android:layout_width="50dp"
-        android:layout_height="50dp" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/weather_data"

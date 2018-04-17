@@ -13,12 +13,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.markfeldman.theweatheroutside.R;
 import com.markfeldman.theweatheroutside.data.WeatherContract;
 import com.markfeldman.theweatheroutside.data.WeatherPreferences;
+import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private String weatherID;
@@ -26,6 +28,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private final int LOADER_ID = 33;
     private String weatherData;
     private TextView retrievedData;
+    private ImageView weatherImage;
     private final String BUNDLE_EXTRA_INT_ID = "Bundle Extra";
     private String[] projection = {WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK, WeatherContract.WeatherData.COLUMN_DATE,
             WeatherContract.WeatherData.COLUMN_ICON_URL, WeatherContract.WeatherData.COLUMN_CONDITIONS, WeatherContract.WeatherData.COLUMN_HUMIDITY,
@@ -35,7 +38,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
+        weatherImage = findViewById(R.id.detail_weather_image);
         retrievedData = (TextView)findViewById(R.id.retrieved_data);
         weatherID = getIntent().getStringExtra(BUNDLE_EXTRA_INT_ID);
         startLoader(weatherID);
@@ -102,6 +105,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         String conditions =data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_CONDITIONS));
         String highCelcius = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC));
         String highFah = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));
+        Picasso.get().load(iconURL).into(weatherImage);
         weatherData = dayOfWeek + " " + weatherDate + " " + humidity + " " + conditions + " " +  highCelcius + " " + highFah;
         retrievedData.setText(weatherData);
     }
