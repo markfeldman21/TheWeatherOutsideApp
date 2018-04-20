@@ -1,4 +1,4 @@
-package com.markfeldman.theweatheroutside.Fragments;
+package com.markfeldman.theweatheroutside.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
