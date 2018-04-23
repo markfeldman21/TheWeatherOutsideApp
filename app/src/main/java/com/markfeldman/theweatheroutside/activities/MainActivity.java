@@ -27,6 +27,7 @@ import com.markfeldman.theweatheroutside.R;
 import com.markfeldman.theweatheroutside.data.WeatherContract;
 import com.markfeldman.theweatheroutside.data.WeatherDatabase;
 import com.markfeldman.theweatheroutside.data.WeatherPreferences;
+import com.markfeldman.theweatheroutside.services.SyncUtility;
 import com.markfeldman.theweatheroutside.utilities.JsonUtils;
 import com.markfeldman.theweatheroutside.utilities.NetworkUtils;
 import com.markfeldman.theweatheroutside.utilities.WeatherRecyclerViewAdapter;
@@ -65,7 +66,8 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
         weatherRecyclerViewAdapter = new WeatherRecyclerViewAdapter(this);
         mRecyclerView.setAdapter(weatherRecyclerViewAdapter);
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
-        retrieveData();
+        SyncUtility.initialize(this);
+        this.getSupportLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -166,60 +168,16 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, final Bundle args) {
-        Log.d(TAG, "LOADER IS CREATED");
-        return new AsyncTaskLoader<Cursor>(this) {
-            Cursor mCursor = null;
+        switch (id){
+            case LOADER_ID:{
+                Uri weatherURI = WeatherContract.WeatherData.CONTENT_URI;
 
-            @Override
-            protected void onStartLoading() {
-                if (mCursor != null) {
-                    deliverResult(mCursor);
-                } else {
-                    progressBar.setVisibility(View.VISIBLE);
-                    forceLoad();
-                }
+                return new CursorLoader(this,weatherURI,projection,null,null,null);
             }
+            default:
+                throw new RuntimeException("CURSOR LOADER NOT IMPLEMENTED " + id);
+        }
 
-            @SuppressLint("NewApi")
-            @Override
-            public Cursor loadInBackground() {
-                Uri weatherQueryUri = WeatherContract.WeatherData.CONTENT_URI;
-                String weatherLocation = args.getString(WEATHER_LOCATION_FOR_LOADER);
-                if (weatherLocation==null || weatherLocation.isEmpty()){
-                    return null;
-                }
-                String okHttpResponse = null;
-                ContentValues[] jsonResults = null;
-                try {
-                    Log.d(TAG, "LOADER IN BACKGROUND!!!!!!");
-                    okHttpResponse = NetworkUtils.okHttpDataRetrieval(weatherLocation);
-                    jsonResults = JsonUtils.getSimpleWeatherStringsFromJson(MainActivity.this,okHttpResponse);
-                    getContentResolver().delete(weatherQueryUri,null,null);
-                    getContentResolver().bulkInsert(weatherQueryUri,jsonResults);
-
-                    mCursor = getContentResolver().query(weatherQueryUri,null,null,null,null,null);
-
-
-                    if (mCursor!=null){
-                        mCursor.moveToFirst();
-                    }else{
-                        Log.d(TAG, "CURSOR IS NULL IN MAIN");
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return mCursor;
-            }
-
-            @Override
-            public void deliverResult(Cursor data) {
-                mCursor = data;
-                super.deliverResult(data);
-            }
-        };
     }
 
     @Override
@@ -228,9 +186,11 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
         progressBar.setVisibility(View.INVISIBLE);
 
         if (data!=null){
+            Log.d(TAG, "LOADER IS DONE NOT NULL!!!!!");
             displayWeather();
             weatherRecyclerViewAdapter.setWeatherData(data);
         }else{
+            Log.d(TAG, "LOADER IS DONE NULL!!!!!");
             errorMessage();
         }
 

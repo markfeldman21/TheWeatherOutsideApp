@@ -31,6 +31,18 @@
             android:authorities="com.markfeldman.theweatheroutside"
             android:name=".data.WeatherContentProvider"
             android:exported="true"/>
+
+        <service android:name=".services.WeatherIntentService"
+            android:exported="false"/>
+
+        <service
+            android:name=".services.FireBaseJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

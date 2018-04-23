@@ -54,11 +54,6 @@ public class SyncUtility {
 
         scheduleFirebaseJobSync(context);
 
-
-        //What is the class of the object that we've passed to Thread() exactly?
-        // It's not an instance of Runnable; Runnable is just an interface.
-        // It's an instance of a class that has no name -- an anonymous class -- that implements Runnable.
-        //https://www.caveofprogramming.com/javatutorial/java-tutorial-8-starting-threads-and-using-anonymous-classes.html
         Thread checkForEmpty = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -79,9 +74,9 @@ public class SyncUtility {
     }
 
     public static void startImmediateSync(@NonNull final Context context) {
-        //Intent intentToSyncImmediately = new Intent(context, MovieIntentService.class);
-        //intentToSyncImmediately.setAction(SyncHelper.EXECUTE_NOW);
-        //context.startService(intentToSyncImmediately);
+        Intent intentToSyncImmediately = new Intent(context, WeatherIntentService.class);
+        intentToSyncImmediately.setAction(WeatherIntentService.EXECUTE_NOW);
+        context.startService(intentToSyncImmediately);
     }
 
 }
