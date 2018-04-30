@@ -89,6 +89,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.d("DETAIl", "CREATING LOADER IN DEATAIL!");
         String weatherIDRetrieved = args.getString(WEATHER_ID_FOR_LOADER_KEY);
         Uri weatherQueryUri = WeatherContract.WeatherData.CONTENT_URI;
         weatherQueryUri = weatherQueryUri.buildUpon().appendPath(weatherIDRetrieved).build();
@@ -98,6 +99,8 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d("DETAIl", "LOAD FINISHED IN DETAIL");
+
         String dayOfWeek = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK));
         String weatherDate = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DATE));
         String humidity = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_HUMIDITY));
@@ -121,8 +124,10 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<String[]> loader = loaderManager.getLoader(LOADER_ID);
         if (loader==null){
+            Log.d("DETAIl", "INITALIZE DETAIL LOADER");
             loaderManager.initLoader(LOADER_ID,queryBundle,this);
         }else{
+            Log.d("DETAIl", "RESTART DETAIL LOADER");
             loaderManager.restartLoader(LOADER_ID,queryBundle,this);
         }
 

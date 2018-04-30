@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
-        weatherRecyclerViewAdapter = new WeatherRecyclerViewAdapter(this);
+        weatherRecyclerViewAdapter = new WeatherRecyclerViewAdapter(this,this);
         mRecyclerView.setAdapter(weatherRecyclerViewAdapter);
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
         SyncUtility.initialize(this);

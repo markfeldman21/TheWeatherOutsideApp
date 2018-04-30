@@ -1,6 +1,7 @@
 package com.markfeldman.theweatheroutside.fragments;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
@@ -9,6 +10,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 
 import com.markfeldman.theweatheroutside.R;
+import com.markfeldman.theweatheroutside.services.WeatherSyncTask;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
     @Override
@@ -41,6 +43,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_units_key))){
+            WeatherSyncTask.syncWeatherDB(getActivity());
+        }
         Preference preference = findPreference(key);
         if (preference!=null){
             if (!(preference instanceof CheckBoxPreference)){

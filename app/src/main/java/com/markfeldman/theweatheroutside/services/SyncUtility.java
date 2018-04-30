@@ -25,6 +25,7 @@ public class SyncUtility {
 
     synchronized public static void initialize(@NonNull final Context context){
         if (initialized){
+            Log.d("SYNCUTILITY", "JOB IS INITIALIZED!");
             return;
         }
         initialized = true;
@@ -57,20 +58,25 @@ public class SyncUtility {
     }
 
     private static void scheduleFirebaseJobSync(@NonNull final Context context){
-        com.firebase.jobdispatcher.Driver driver = new GooglePlayDriver(context);
-        FirebaseJobDispatcher firebaseJobDispatcher = new FirebaseJobDispatcher(driver);
+        Log.d("SYNCUTILITY", "JOB SCHEDULED!");
+        try {
+            com.firebase.jobdispatcher.Driver driver = new GooglePlayDriver(context);
+            FirebaseJobDispatcher firebaseJobDispatcher = new FirebaseJobDispatcher(driver);
 
-        Job syncJob = firebaseJobDispatcher.newJobBuilder()
-                .setService(FireBaseJobService.class)
-                .setTag(WEATHER_SYNC_TAG)
-                .setConstraints(Constraint.ON_ANY_NETWORK)
-                .setLifetime(Lifetime.FOREVER)
-                .setRecurring(true)
-                .setTrigger(Trigger.executionWindow(0,20))
-                .setReplaceCurrent(true)
-                .build();
-        firebaseJobDispatcher.schedule(syncJob);
+            Job syncJob = firebaseJobDispatcher.newJobBuilder()
+                    .setService(FireBaseJobService.class)
+                    .setTag(WEATHER_SYNC_TAG)
+                    .setConstraints(Constraint.ON_ANY_NETWORK)
+                    .setLifetime(Lifetime.FOREVER)
+                    .setRecurring(true)
+                    .setTrigger(Trigger.executionWindow(0,3))
+                    .setReplaceCurrent(true)
+                    .build();
+            firebaseJobDispatcher.schedule(syncJob);
 
+        }catch (Exception e){
+            Log.v("TAG","PROBLEM IN SCHEDULING!!!!!!!!!!!!! + " + e);
+        }
         Log.v("TAG","JOB TRIGGERED!!!!!!!!!!!!!");
     }
 

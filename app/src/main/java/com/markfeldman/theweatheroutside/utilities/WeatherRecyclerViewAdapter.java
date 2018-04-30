@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.squareup.picasso.Picasso;
 
 public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecyclerViewAdapter.WeatherAdapterViewHolder> {
     private final String TAG = WeatherRecyclerViewAdapter.class.getSimpleName();
+    private Context context;
     private Cursor mCursor;
     private WeatherRowClicked weatherRowClickedListener;
 
@@ -24,8 +26,9 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         void onClicked(String weatherID);
     }
 
-    public WeatherRecyclerViewAdapter(WeatherRowClicked weatherRowClickedListener){
+    public WeatherRecyclerViewAdapter(WeatherRowClicked weatherRowClickedListener, Context context){
         this.weatherRowClickedListener = weatherRowClickedListener;
+        this.context = context;
 
     }
 
@@ -44,6 +47,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
     @Override
     public void onBindViewHolder(WeatherAdapterViewHolder holder, int position) {
         mCursor.moveToPosition(position);
+        String finalUnit = null;
         String weatherDate = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_DATE));
         String weatherDay = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK));
         String humidity = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HUMIDITY));
@@ -53,8 +57,14 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         String highFah = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));
         Picasso.get().load(iconURL).into(holder.weatherImage);
 
-        holder.weatherData.setText(weatherDay + " " + weatherDate + " " + conditions + ". High Of " + highCelcius
-        + "/" + highFah);
+        String prefUnit = WeatherPreferences.getPreferredUnits(context);
+        if (prefUnit.equals("metric")){
+            finalUnit = highCelcius + " degrees Celcius!";
+        }else if (prefUnit.equals("imperial")) {
+            finalUnit = highFah + " degrees Fahrenheit!";
+        }
+
+        holder.weatherData.setText(weatherDay + " " + weatherDate + " " + conditions + ". High Of " + finalUnit);
 
     }
 
