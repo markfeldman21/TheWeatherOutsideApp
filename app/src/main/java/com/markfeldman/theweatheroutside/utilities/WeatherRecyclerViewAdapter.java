@@ -1,6 +1,7 @@
 package com.markfeldman.theweatheroutside.utilities;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.markfeldman.theweatheroutside.R;
 import com.markfeldman.theweatheroutside.data.WeatherContract;
+import com.markfeldman.theweatheroutside.data.WeatherPreferences;
 import com.squareup.picasso.Picasso;
 
 
@@ -49,7 +51,6 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         String conditions = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_CONDITIONS));
         String highCelcius = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC));
         String highFah = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));
-        Context context = holder.weatherImage.getContext();
         Picasso.get().load(iconURL).into(holder.weatherImage);
 
         holder.weatherData.setText(weatherDay + " " + weatherDate + " " + conditions + ". High Of " + highCelcius

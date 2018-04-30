@@ -6,25 +6,22 @@
 
     <ImageView
         android:id="@+id/weather_icon"
-        app:layout_constraintRight_toLeftOf="@id/weather_data"
-        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/weather_data"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="50dp"
-        android:layout_height="match_parent" />
+        android:layout_height="50dp" />
 
     <TextView
         android:id="@+id/weather_data"
-        app:layout_constraintLeft_toRightOf="@id/weather_icon"
+        android:text="EXAMPLE"
         android:textStyle="bold"
+        android:paddingRight="16dp"
+        app:layout_constraintStart_toEndOf="@id/weather_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         style="@style/TextAppearance.AppCompat.Large"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content" />
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#dadada"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp" />
 
 </android.support.constraint.ConstraintLayout>

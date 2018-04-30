@@ -14,8 +14,6 @@ import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.Trigger;
 import com.markfeldman.theweatheroutside.data.WeatherContract;
-
-import java.sql.Driver;
 import java.util.concurrent.TimeUnit;
 
 public class SyncUtility {
@@ -23,28 +21,7 @@ public class SyncUtility {
     private static final int SYNC_INTERVAL_SECONDS = (int) TimeUnit.MINUTES.toSeconds(SYNC_INTERVAL_MINUTES);
     private static final int SYNC_NEXT = SYNC_INTERVAL_SECONDS;
     private static boolean initialized;
-    private static final String MOVIE_SYNC_TAG = "movie_sync";
-
-    private static void scheduleFirebaseJobSync(@NonNull final Context context){
-        com.firebase.jobdispatcher.Driver driver = new GooglePlayDriver(context);
-        FirebaseJobDispatcher firebaseJobDispatcher = new FirebaseJobDispatcher(driver);
-
-        Job syncJob = firebaseJobDispatcher.newJobBuilder()
-                .setService(FireBaseJobService.class)
-                .setTag(MOVIE_SYNC_TAG)
-                .setConstraints(Constraint.ON_ANY_NETWORK)
-                .setLifetime(Lifetime.FOREVER)
-                .setRecurring(true)
-                // start between 0 and X seconds from now
-                .setTrigger(Trigger.executionWindow(0,20))
-                .setReplaceCurrent(true)
-                .build();
-        firebaseJobDispatcher.schedule(syncJob);
-
-        Log.v("TAG","JOB TRIGGERED!!!!!!!!!!!!!");
-    }
-
-
+    private static final String WEATHER_SYNC_TAG = "weather_sync";
 
     synchronized public static void initialize(@NonNull final Context context){
         if (initialized){
@@ -77,6 +54,24 @@ public class SyncUtility {
         Intent intentToSyncImmediately = new Intent(context, WeatherIntentService.class);
         intentToSyncImmediately.setAction(WeatherIntentService.EXECUTE_NOW);
         context.startService(intentToSyncImmediately);
+    }
+
+    private static void scheduleFirebaseJobSync(@NonNull final Context context){
+        com.firebase.jobdispatcher.Driver driver = new GooglePlayDriver(context);
+        FirebaseJobDispatcher firebaseJobDispatcher = new FirebaseJobDispatcher(driver);
+
+        Job syncJob = firebaseJobDispatcher.newJobBuilder()
+                .setService(FireBaseJobService.class)
+                .setTag(WEATHER_SYNC_TAG)
+                .setConstraints(Constraint.ON_ANY_NETWORK)
+                .setLifetime(Lifetime.FOREVER)
+                .setRecurring(true)
+                .setTrigger(Trigger.executionWindow(0,20))
+                .setReplaceCurrent(true)
+                .build();
+        firebaseJobDispatcher.schedule(syncJob);
+
+        Log.v("TAG","JOB TRIGGERED!!!!!!!!!!!!!");
     }
 
 }

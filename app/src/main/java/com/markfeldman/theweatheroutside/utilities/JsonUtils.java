@@ -72,6 +72,7 @@ public final class JsonUtils {
             iconURL = simpleForecastIndividual.getString(ICON_URL);
             finalDate = month + " " + dayNumber + " " + year;
 
+            //MAYBE CHANGE DATABASE SCHEMA FOR ONE FINAL UNIT ENTRY INSTEAD OF BOTH
             if (selectedPrefUnits.equals("imperial")){
                 finalUnits = highTempCelcius;
             }else if (selectedPrefUnits.equals("metric")){

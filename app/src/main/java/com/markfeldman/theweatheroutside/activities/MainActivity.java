@@ -202,32 +202,7 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
     }
 
 
-    /*
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        Uri weatherQueryUri = WeatherContract.WeatherData.CONTENT_URI;
-
-
-
-        return new CursorLoader(this,weatherQueryUri,null,null,null,null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d(TAG, "LOADER IS DONE!!!!!");
-        progressBar.setVisibility(View.INVISIBLE);
-
-        if (data!=null){
-            displayWeather();
-            weatherRecyclerViewAdapter.setWeatherData(data);
-        }else{
-            errorMessage();
-        }
-
-    }
-
-    */
 
     @Override
     protected void onDestroy() {
