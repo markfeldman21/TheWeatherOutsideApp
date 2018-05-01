@@ -39,10 +39,12 @@ public class WeatherContentProvider extends ContentProvider {
 
         switch (match){
             case WHOLE_WEATHER:{
+                Log.d("CP", "IN ALL ROW CONTENT");
                 mCursor = weatherDatabase.getAllRows();
                 break;
             }
             case WEATHER_ID:{
+                Log.d("CP", "IN SPECIFIC ROW CONTENT");
                 mCursor = weatherDatabase.getSpecificRow(WeatherContract.WeatherData.TABLE_NAME,projection,selection,selectionArgs);
                 break;
             }
@@ -111,6 +113,7 @@ public class WeatherContentProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+        String selectionStatement = WeatherContract.WeatherData._ID+"=?";
         return 0;
     }
 }

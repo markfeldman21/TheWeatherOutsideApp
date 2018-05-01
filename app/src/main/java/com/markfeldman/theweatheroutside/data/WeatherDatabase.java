@@ -47,8 +47,13 @@ public class WeatherDatabase {
         return mDb.query(WeatherContract.WeatherData.TABLE_NAME,null,null,null,null,null,null);
     }
 
+    public void updateRow(ContentValues weatherValue,String where, String selection){
+            mDb.update(WeatherContract.WeatherData.TABLE_NAME,weatherValue,null,null);
+    }
+
     public Cursor getSpecificRow(String tableName,String[] projection,String selection,String[] rowID){
         Cursor c = mDb.query(tableName,projection,selection,rowID,null,null,null);
+        Log.d("CP", "IN DATABASE ==== "  + c.getCount());
         if (c!=null){
             c.moveToFirst();
         }
@@ -95,7 +100,7 @@ public class WeatherDatabase {
         private static final String DATABASE_NAME = "weather.db";
         private static final int DATABASE_VERSION = 2;
         private final static String CREATE_DATABASE = "CREATE TABLE " + WeatherContract.WeatherData.TABLE_NAME +
-                " ("+ WeatherContract.WeatherData._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                " ("+ WeatherContract.WeatherData._ID + " INTEGER PRIMARY KEY, " +
                 WeatherContract.WeatherData.COLUMN_DATE + " TEXT NOT NULL, " +
                 WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK + " TEXT NOT NULL, " +
                 WeatherContract.WeatherData.COLUMN_HUMIDITY + " TEXT NOT NULL, " +

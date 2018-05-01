@@ -2,6 +2,7 @@ package com.markfeldman.theweatheroutside.services;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
@@ -19,8 +20,18 @@ public class WeatherSyncTask {
             String weatherLocation = WeatherPreferences.getPreferredWeatherLocation(context);
             String okHttpResponse = NetworkUtils.okHttpDataRetrieval(weatherLocation);
             ContentValues[] jsonResults = JsonUtils.getSimpleWeatherStringsFromJson(context,okHttpResponse);
+
             context.getContentResolver().delete(weatherQueryUri,null,null);
             context.getContentResolver().bulkInsert(weatherQueryUri,jsonResults);
+
+
+
+            /*
+            for (int i =0; i<jsonResults.length;i++){
+                context.getContentResolver().update(weatherQueryUri,jsonResults[i],null,null);
+            }
+            */
+
 
         }catch (Exception e){
 

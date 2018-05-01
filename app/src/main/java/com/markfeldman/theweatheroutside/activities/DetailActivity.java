@@ -3,7 +3,6 @@ package com.markfeldman.theweatheroutside.activities;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.content.CursorLoader;
@@ -41,6 +40,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         weatherImage = findViewById(R.id.detail_weather_image);
         retrievedData = (TextView)findViewById(R.id.retrieved_data);
         weatherID = getIntent().getStringExtra(BUNDLE_EXTRA_INT_ID);
+        Toast.makeText(this,"ID = " + weatherID,Toast.LENGTH_LONG).show();
         startLoader(weatherID);
     }
 
@@ -57,7 +57,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         }
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,17 +88,24 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.d("DETAIl", "CREATING LOADER IN DEATAIL!");
+        Log.d("DETAIl", "CREATING LOADER IN DEATAIL! WEATHER ID ===== " + weatherID);
         String weatherIDRetrieved = args.getString(WEATHER_ID_FOR_LOADER_KEY);
         Uri weatherQueryUri = WeatherContract.WeatherData.CONTENT_URI;
         weatherQueryUri = weatherQueryUri.buildUpon().appendPath(weatherIDRetrieved).build();
         String selectionWhere = WeatherContract.WeatherData._ID + "=?";
+
         return new CursorLoader(this,weatherQueryUri,projection,selectionWhere,new String[]{weatherID},null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.d("DETAIl", "LOAD FINISHED IN DETAIL");
+        if (data.getCount() != 0){
+            Log.d("DETAIl", "LOAD FINISHED IN DETAIL NOT ZERO " + data.getCount());
+        }else if (data.getCount() == 0) {
+            startLoader(weatherID);
+            Log.d("DETAIl", "LOAD FINISHED IN DETAIL YES ZERO");
+        }
 
         String dayOfWeek = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK));
         String weatherDate = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DATE));
@@ -119,6 +125,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void startLoader(String weatherRowId){
+        Log.d("DETAIl", "IN START LOADER");
         Bundle queryBundle = new Bundle();
         queryBundle.putString(WEATHER_ID_FOR_LOADER_KEY,weatherRowId);
         LoaderManager loaderManager = getSupportLoaderManager();

@@ -58,8 +58,9 @@ public class SyncUtility {
     }
 
     private static void scheduleFirebaseJobSync(@NonNull final Context context){
-        Log.d("SYNCUTILITY", "JOB SCHEDULED!");
+
         try {
+            Log.d("SYNCUTILITY", "JOB SCHEDULED!");
             com.firebase.jobdispatcher.Driver driver = new GooglePlayDriver(context);
             FirebaseJobDispatcher firebaseJobDispatcher = new FirebaseJobDispatcher(driver);
 
