@@ -152,9 +152,10 @@
 
 
     <!-- - - - - - - - - - - -->
-    <!-- Used by NetworkUtils-->
+    <!-- Used by DetailActivity-->
     <!-- - - - - - - - - - - -->
     <!--NONE-->
+    <string name="humidity_label">Humidity</string>
 
     <!-- - - - - - - - - - - - - - - -->
     <!-- Used by OpenWeatherJsonUtils-->
