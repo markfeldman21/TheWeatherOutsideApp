@@ -32,7 +32,7 @@ public final class JsonUtils {
         final String FAHREN = "fahrenheit";
         final String CONDITIONS = "conditions";
         final String HUMIDITY = "avehumidity";
-        final String ICON_URL = "icon_url";
+        final String ICON = "icon";
         String selectedPrefUnits = WeatherPreferences.getPreferredUnits(context);
 
         JSONObject overallResponse = new JSONObject(forecastJsonStr);
@@ -50,7 +50,7 @@ public final class JsonUtils {
             String year;
             String finalDate;
             String humidity;
-            String iconURL;
+            String icon;
             String conditions;
             String highTempCelcius;
             String highTempF;
@@ -69,7 +69,7 @@ public final class JsonUtils {
             highTempF = simpleForecasteHigh.getString(FAHREN);
             conditions = simpleForecastIndividual.getString(CONDITIONS);
             humidity = simpleForecastIndividual.getString(HUMIDITY);
-            iconURL = simpleForecastIndividual.getString(ICON_URL);
+            icon = simpleForecastIndividual.getString(ICON);
             finalDate = month + " " + dayNumber + " " + year;
 
             //MAYBE CHANGE DATABASE SCHEMA FOR ONE FINAL UNIT ENTRY INSTEAD OF BOTH
@@ -82,7 +82,7 @@ public final class JsonUtils {
             cv.put(WeatherContract.WeatherData.COLUMN_DATE, month + " " + dayNumber + " " + year);
             cv.put(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK, day);
             cv.put(WeatherContract.WeatherData.COLUMN_HUMIDITY, humidity);
-            cv.put(WeatherContract.WeatherData.COLUMN_ICON_URL, iconURL);
+            cv.put(WeatherContract.WeatherData.COLUMN_ICON, icon);
             cv.put(WeatherContract.WeatherData.COLUMN_CONDITIONS,conditions);
             cv.put(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC,highTempCelcius);
             cv.put(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF, highTempF);

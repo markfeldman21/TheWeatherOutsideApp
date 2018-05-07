@@ -37,7 +37,7 @@ public class SyncUtility {
             public void run() {
                 Uri uri = WeatherContract.WeatherData.CONTENT_URI;
                 String[] projection = {WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK, WeatherContract.WeatherData.COLUMN_DATE,
-                        WeatherContract.WeatherData.COLUMN_ICON_URL, WeatherContract.WeatherData.COLUMN_CONDITIONS, WeatherContract.WeatherData.COLUMN_HUMIDITY,
+                        WeatherContract.WeatherData.COLUMN_ICON, WeatherContract.WeatherData.COLUMN_CONDITIONS, WeatherContract.WeatherData.COLUMN_HUMIDITY,
                         WeatherContract.WeatherData.COLUMN_HIGH_TEMPC, WeatherContract.WeatherData.COLUMN_HIGH_TEMPF};
 
                 Cursor cursor = context.getContentResolver().query(uri,projection,null,null,null);

@@ -74,16 +74,17 @@ public final class WeatherUtils {
         return String.format(context.getString(windFormat), windSpeed, direction);
     }
 
-    /**
-     * Helper method to provide the string according to the weather
-     * condition id returned by the OpenWeatherMap call.
-     *
-     * @param context   Android context
-     * @param weatherId from OpenWeatherMap API response
-     *                  http://bugs.openweathermap.org/projects/api/wiki/Weather_Condition_Codes
-     *
-     * @return String for the weather condition, null if no relation is found.
-     */
+    public static int whichIconToUse(String icon){
+        int iconResToReturn = -1;
+        Log.d("WEATH UTILS", "IN WEATHER UTILS ==== ENTER!");
+
+        if (icon.equals("clear")){
+            Log.d("WEATH UTILS", "IN WEATHER UTILS ====CLEAR! " + R.drawable.art_clear);
+            return R.drawable.art_clear;
+        }
+
+        return iconResToReturn;
+    };
     public static String getStringForWeatherCondition(Context context, int weatherId) {
         int stringId;
         if (weatherId >= 200 && weatherId <= 232) {

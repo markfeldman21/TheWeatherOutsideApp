@@ -104,7 +104,7 @@ public class WeatherDatabase {
                 WeatherContract.WeatherData.COLUMN_DATE + " TEXT NOT NULL, " +
                 WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK + " TEXT NOT NULL, " +
                 WeatherContract.WeatherData.COLUMN_HUMIDITY + " TEXT NOT NULL, " +
-                WeatherContract.WeatherData.COLUMN_ICON_URL  + " TEXT NOT NULL, " +
+                WeatherContract.WeatherData.COLUMN_ICON  + " TEXT NOT NULL, " +
                 WeatherContract.WeatherData.COLUMN_CONDITIONS  + " TEXT NOT NULL, " +
                 WeatherContract.WeatherData.COLUMN_HIGH_TEMPC  + " TEXT NOT NULL, " +
                 WeatherContract.WeatherData.COLUMN_HIGH_TEMPF  + " TEXT NOT NULL, " +

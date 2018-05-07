@@ -51,11 +51,12 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         String weatherDate = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_DATE));
         String weatherDay = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK));
         String humidity = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HUMIDITY));
-        String iconURL = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_ICON_URL));
+        String icon = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_ICON));
         String conditions = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_CONDITIONS));
         String highCelcius = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC));
         String highFah = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));
-        Picasso.get().load(iconURL).into(holder.weatherImage);
+        //Picasso.get().load(iconURL).into(holder.weatherImage);
+        int iconResource = WeatherUtils.whichIconToUse(icon); //2131165267 For Clear
 
         String prefUnit = WeatherPreferences.getPreferredUnits(context);
         if (prefUnit.equals("metric")){
@@ -64,7 +65,9 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
             finalUnit = highFah + " degrees Fahrenheit!";
         }
 
-        holder.weatherData.setText(weatherDay + " " + weatherDate + " " + conditions + ". High Of " + finalUnit);
+        holder.weatherData.setText(weatherDay + " " + weatherDate + " " + conditions + ". High Of " + finalUnit
+        + " ICON IS == " + iconResource);
+        holder.weatherImage.setImageResource(R.drawable.art_clear);
 
     }
 

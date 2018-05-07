@@ -32,7 +32,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private ImageView weatherImage;
     private final String BUNDLE_EXTRA_INT_ID = "Bundle Extra";
     private String[] projection = {WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK, WeatherContract.WeatherData.COLUMN_DATE,
-            WeatherContract.WeatherData.COLUMN_ICON_URL, WeatherContract.WeatherData.COLUMN_CONDITIONS, WeatherContract.WeatherData.COLUMN_HUMIDITY,
+            WeatherContract.WeatherData.COLUMN_ICON, WeatherContract.WeatherData.COLUMN_CONDITIONS, WeatherContract.WeatherData.COLUMN_HUMIDITY,
             WeatherContract.WeatherData.COLUMN_HIGH_TEMPC, WeatherContract.WeatherData.COLUMN_HIGH_TEMPF};
 
     @Override
@@ -112,7 +112,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         String dayOfWeek = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK));
         String weatherDate = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DATE));
         String humidity = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_HUMIDITY));
-        String iconURL = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_ICON_URL));
+        String iconURL = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_ICON));
         String conditions =data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_CONDITIONS));
         String highCelcius = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC));
         String highFah = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));

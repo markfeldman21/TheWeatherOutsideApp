@@ -20,7 +20,7 @@ public class WeatherContract {
         public static final String COLUMN_DATE = "date";
         public static final String COLUMN_DAY_OF_WEEK = "day";
         public static final String COLUMN_HUMIDITY = "humidity";
-        public static final String COLUMN_ICON_URL = "icon_url";
+        public static final String COLUMN_ICON = "icon";
         public static final String COLUMN_CONDITIONS = "conditions";
         public static final String COLUMN_HIGH_TEMPC = "celcius";
         public static final String COLUMN_HIGH_TEMPF = "fahrenheit";
