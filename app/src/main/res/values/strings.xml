@@ -156,6 +156,7 @@
     <!-- - - - - - - - - - - -->
     <!--NONE-->
     <string name="humidity_label">Humidity</string>
+    <!--<string name="welcome_messages">Hello, %1$s! You have %2$d new messages.</string>-->
 
     <!-- - - - - - - - - - - - - - - -->
     <!-- Used by OpenWeatherJsonUtils-->
