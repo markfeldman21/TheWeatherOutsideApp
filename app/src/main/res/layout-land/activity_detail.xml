@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.markfeldman.theweatheroutside.activities.DetailActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="16dp"
+    android:paddingEnd="32dp"
+    android:paddingLeft="32dp"
+    android:paddingRight="32dp"
+    android:paddingStart="32dp"
+    android:paddingTop="4dp">
+
+
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:textSize="40sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:gravity="center"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/detail_weather_image"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="Saturday, September 24"/>
+
+
+    <ImageView
+        android:id="@+id/detail_weather_image"
+        android:layout_width="328dp"
+        android:layout_height="96dp"
+        android:paddingTop="16dp"
+        android:src="@drawable/art_clear"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date"
+
+        />
+
+
+    <TextView
+        android:id="@+id/retrieved_temp"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        tools:text="19 c"
+        app:layout_constraintLeft_toRightOf="@id/detail_weather_image"
+        app:layout_constraintTop_toBottomOf="@+id/date"
+        app:layout_constraintStart_toEndOf="@id/detail_weather_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/detail_conditions"
+        tools:text="CLOUDY TEST"
+        app:layout_constraintTop_toBottomOf="@id/detail_weather_image"
+        app:layout_constraintStart_toStartOf="@id/detail_weather_image"
+        app:layout_constraintEnd_toEndOf="@id/detail_weather_image"
+        android:paddingTop="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</android.support.constraint.ConstraintLayout>
