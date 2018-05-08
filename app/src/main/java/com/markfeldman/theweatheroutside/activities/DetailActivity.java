@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.markfeldman.theweatheroutside.R;
 import com.markfeldman.theweatheroutside.data.WeatherContract;
 import com.markfeldman.theweatheroutside.data.WeatherPreferences;
+import com.markfeldman.theweatheroutside.utilities.WeatherUtils;
 import com.squareup.picasso.Picasso;
 
 public class DetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -45,7 +46,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         detailConditions =findViewById(R.id.detail_conditions);
         retrievedTemp = findViewById(R.id.retrieved_temp);
         weatherID = getIntent().getStringExtra(BUNDLE_EXTRA_INT_ID);
-        Toast.makeText(this,"ID = " + weatherID,Toast.LENGTH_LONG).show();
         startLoader(weatherID);
     }
 
@@ -112,21 +112,22 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         String dayOfWeek = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK));
         String weatherDate = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DATE));
         String humidity = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_HUMIDITY));
-        String iconURL = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_ICON));
+        String icon = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_ICON));
         String conditions =data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_CONDITIONS));
         String highCelcius = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC));
         String highFah = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));
         String finalUnit = "";
         String prefUnit = WeatherPreferences.getPreferredUnits(this);
         if (prefUnit.equals("metric")){
-            finalUnit = highCelcius + " C";
+            finalUnit = highCelcius + "\u2103";
         }else if (prefUnit.equals("imperial")) {
-            finalUnit = highFah + " F";
+            finalUnit = highFah + "\u2109";
         }
-        Picasso.get().load(iconURL).into(weatherImage);
+        int imageToUse = WeatherUtils.whichIconToUse(icon);
+        weatherImage.setImageResource(imageToUse);
         weatherData = highCelcius + " " + highFah;
         retrievedTemp.setText(weatherData);
-        date.setText(dayOfWeek + " " + weatherDate);
+        date.setText(weatherDate);
         detailConditions.setText(conditions);
         retrievedTemp.setText(finalUnit);
     }

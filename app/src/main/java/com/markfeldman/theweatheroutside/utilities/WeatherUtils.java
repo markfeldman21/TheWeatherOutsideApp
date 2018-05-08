@@ -75,14 +75,24 @@ public final class WeatherUtils {
     }
 
     public static int whichIconToUse(String icon){
-        int iconResToReturn = -1;
-        Log.d("WEATH UTILS", "IN WEATHER UTILS ==== ENTER!");
-
+        int iconResToReturn = R.drawable.art_clouds;
         if (icon.equals("clear")){
-            Log.d("WEATH UTILS", "IN WEATHER UTILS ====CLEAR! " + R.drawable.art_clear);
             return R.drawable.art_clear;
+        }else if (icon.equals("partlycloudy")){
+            return R.drawable.art_light_clouds;
+        }else if (icon.equals("cloudy")){
+            return R.drawable.art_clouds;
+        }else if (icon.equals("chancerain")){
+            return R.drawable.art_light_rain;
+        }else if (icon.equals("rain")){
+            return R.drawable.art_rain;
+        }else if (icon.equals("chancetstorms")){
+            return R.drawable.art_storm;
+        }else if (icon.equals("tstorms")){
+            return R.drawable.art_storm;
+        }else if (icon.equals("snow")){
+            return R.drawable.art_snow;
         }
-
         return iconResToReturn;
     };
     public static String getStringForWeatherCondition(Context context, int weatherId) {

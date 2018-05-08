@@ -55,19 +55,19 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         String conditions = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_CONDITIONS));
         String highCelcius = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC));
         String highFah = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));
-        //Picasso.get().load(iconURL).into(holder.weatherImage);
         int iconResource = WeatherUtils.whichIconToUse(icon); //2131165267 For Clear
 
         String prefUnit = WeatherPreferences.getPreferredUnits(context);
         if (prefUnit.equals("metric")){
-            finalUnit = highCelcius + " degrees Celcius!";
+            finalUnit = highCelcius + " \u2103";
         }else if (prefUnit.equals("imperial")) {
-            finalUnit = highFah + " degrees Fahrenheit!";
+            finalUnit = highFah + "\u2109";
         }
 
-        holder.weatherData.setText(weatherDay + " " + weatherDate + " " + conditions + ". High Of " + finalUnit
-        + " ICON IS == " + iconResource);
-        holder.weatherImage.setImageResource(R.drawable.art_clear);
+        holder.weatherData.setText(weatherDay);
+        holder.weatherImage.setImageResource(iconResource);
+        holder.weatherConditions.setText(conditions);
+        holder.weatherTemp.setText(finalUnit);
 
     }
 
@@ -91,11 +91,15 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
     class WeatherAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView weatherData;
         private ImageView weatherImage;
+        private TextView weatherConditions;
+        private TextView weatherTemp;
 
         private WeatherAdapterViewHolder(View itemView) {
             super(itemView);
             weatherImage = itemView.findViewById(R.id.weather_icon);
             weatherData = itemView.findViewById(R.id.weather_data);
+            weatherConditions = itemView.findViewById(R.id.main_weather_conditions);
+            weatherTemp = itemView.findViewById(R.id.main_weather_degrees);
             itemView.setOnClickListener(this);
         }
 
