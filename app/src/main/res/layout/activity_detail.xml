@@ -29,6 +29,14 @@
         app:layout_constraintRight_toRightOf="parent"
         tools:text="September 24"/>
 
+    <TextView
+        android:id="@+id/detail_day"
+        app:layout_constraintTop_toBottomOf="@id/date"
+        app:layout_constraintStart_toStartOf="@id/date"
+        app:layout_constraintEnd_toEndOf="@id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 
     <ImageView
         android:id="@+id/detail_weather_image"

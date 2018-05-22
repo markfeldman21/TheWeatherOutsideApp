@@ -21,6 +21,8 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
     private Context context;
     private Cursor mCursor;
     private WeatherRowClicked weatherRowClickedListener;
+    private static final int VIEW_TYPE_TODAY = 0;
+    private static final int VIEW_TYPE_FUTURE_DAY = 1;
 
     public interface WeatherRowClicked{
         void onClicked(String weatherID);
@@ -35,12 +37,28 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
 
     @Override
     public WeatherAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        int layoutId;
+
+        switch (viewType) {
+            case VIEW_TYPE_TODAY: {
+                layoutId = R.layout.weather_list_today_layout;
+                break;
+            }
+
+            case VIEW_TYPE_FUTURE_DAY: {
+                layoutId = R.layout.weather_list_layout;
+                break;
+            }
+
+            default:
+                throw new IllegalArgumentException("Invalid view type, value of " + viewType);
+        }
         Context context = parent.getContext();
         int layoutIdForListItem = R.layout.weather_list_layout;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
 
-        View view = inflater.inflate(layoutIdForListItem, parent, shouldAttachToParentImmediately);
+        View view = inflater.inflate(layoutId, parent, shouldAttachToParentImmediately);
         return new WeatherAdapterViewHolder(view);
     }
 
@@ -55,7 +73,8 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         String conditions = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_CONDITIONS));
         String highCelcius = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC));
         String highFah = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));
-        int iconResource = WeatherUtils.whichIconToUse(icon); //2131165267 For Clear
+        int iconResource = WeatherUtils.whichIconToUse(icon);
+
 
         String prefUnit = WeatherPreferences.getPreferredUnits(context);
         if (prefUnit.equals("metric")){
@@ -108,6 +127,15 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
             weatherRowClickedListener.onClicked(mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData._ID)));
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return VIEW_TYPE_TODAY;
+        } else {
+            return VIEW_TYPE_FUTURE_DAY;
         }
     }
 }

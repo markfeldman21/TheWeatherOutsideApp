@@ -18,6 +18,7 @@ public class WeatherSyncTask {
             Log.d(TAG,"JOB WAS EXECUTED!!!!" );
             Uri weatherQueryUri = WeatherContract.WeatherData.CONTENT_URI;
             String weatherLocation = WeatherPreferences.getPreferredWeatherLocation(context);
+            Log.d(TAG,"LOCATION IS " + weatherLocation );
             String okHttpResponse = NetworkUtils.okHttpDataRetrieval(weatherLocation);
             ContentValues[] jsonResults = JsonUtils.getSimpleWeatherStringsFromJson(context,okHttpResponse);
 
@@ -25,16 +26,8 @@ public class WeatherSyncTask {
             context.getContentResolver().bulkInsert(weatherQueryUri,jsonResults);
 
 
-
-            /*
-            for (int i =0; i<jsonResults.length;i++){
-                context.getContentResolver().update(weatherQueryUri,jsonResults[i],null,null);
-            }
-            */
-
-
         }catch (Exception e){
-
+            Log.d(TAG, "PROBLEM IN SYNC + " + e);
         }
 
     }

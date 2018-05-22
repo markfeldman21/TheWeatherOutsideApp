@@ -23,13 +23,6 @@ public final class NetworkUtils {
 
     private static final String FORECAST_BASE_URL = STATIC_WEATHER_URL;
 
-    /*
-     * NOTE: These values only effect responses from OpenWeatherMap, NOT from the fake weather
-     * server. They are simply here to allow us to teach you how to build a URL if you were to use
-     * a real API.If you want to connect your app to OpenWeatherMap's API, feel free to! However,
-     * we are not going to show you how to do so in this course.
-     */
-
     /* The format we want our API to return */
     private static final String format = "json";
     /* The units we want our API to return */
@@ -72,6 +65,7 @@ public final class NetworkUtils {
 
     public static String okHttpDataRetrieval(String weatherLocation) throws IOException {
         String url = URLStringbuildUrl(weatherLocation);
+        Log.d(TAG, "IN UTILS = " + url);
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()

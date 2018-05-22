@@ -8,8 +8,10 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+import android.util.Log;
 
 import com.markfeldman.theweatheroutside.R;
+import com.markfeldman.theweatheroutside.services.SyncUtility;
 import com.markfeldman.theweatheroutside.services.WeatherSyncTask;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -43,8 +45,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.pref_units_key))){
-            WeatherSyncTask.syncWeatherDB(getActivity());
+        if (key.equals(getString(R.string.pref_units_key)) || key.equals(getString(R.string.location_key))){
+            SyncUtility.startImmediateSync(getActivity());
         }
         Preference preference = findPreference(key);
         if (preference!=null){

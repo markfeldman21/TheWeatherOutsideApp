@@ -29,6 +29,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
     private String weatherData;
     private TextView retrievedTemp;
     private TextView date;
+    private TextView day;
     private TextView detailConditions;
     private ImageView weatherImage;
     private final String BUNDLE_EXTRA_INT_ID = "Bundle Extra";
@@ -43,6 +44,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         date = findViewById(R.id.date) ;//Starting with API 26, findViewById uses inference
         // for its return type, so you no longer have to cast.
         weatherImage = findViewById(R.id.detail_weather_image);
+        day = findViewById(R.id.detail_day);
         detailConditions =findViewById(R.id.detail_conditions);
         retrievedTemp = findViewById(R.id.retrieved_temp);
         weatherID = getIntent().getStringExtra(BUNDLE_EXTRA_INT_ID);
@@ -93,7 +95,6 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.d("DETAIl", "CREATING LOADER IN DEATAIL! WEATHER ID ===== " + weatherID);
         String weatherIDRetrieved = args.getString(WEATHER_ID_FOR_LOADER_KEY);
         Uri weatherQueryUri = WeatherContract.WeatherData.CONTENT_URI;
         weatherQueryUri = weatherQueryUri.buildUpon().appendPath(weatherIDRetrieved).build();
@@ -130,6 +131,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         date.setText(weatherDate);
         detailConditions.setText(conditions);
         retrievedTemp.setText(finalUnit);
+        day.setText(dayOfWeek);
     }
 
     @Override

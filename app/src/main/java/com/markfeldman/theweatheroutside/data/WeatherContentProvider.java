@@ -79,7 +79,7 @@ public class WeatherContentProvider extends ContentProvider {
 
         switch (match){
             case WHOLE_WEATHER: {
-
+                Log.d("CONTENT", "IN BULK INSERT!!!!");
                 weatherDatabase.beginTransaction();
                 try{
                     for (ContentValues cv: values){
@@ -96,6 +96,7 @@ public class WeatherContentProvider extends ContentProvider {
                     weatherDatabase.close();
                 }
                 if (numberOfRowsInserted>0){
+                    Log.d("CONTENT", "IN BULK INSERT!!!! NOTIFIED");
                     getContext().getContentResolver().notifyChange(uri,null);
                 }
             }
@@ -106,6 +107,7 @@ public class WeatherContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+        Log.d("CONTENT", "IN CONTENT DELETE");
         weatherDatabase.openWritableDatabase();
         weatherDatabase.deleteTable();
         return 0;

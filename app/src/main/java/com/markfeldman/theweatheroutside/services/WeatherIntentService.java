@@ -8,11 +8,7 @@ public class WeatherIntentService extends IntentService {
     public static final String DISMISS_ACTION_NOTIFICATION = "dimiss_notification";
     public static final String EXECUTE_NOW = "execute_now";
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
+
     public WeatherIntentService() {
         super("WeatherIntentService");
     }
