@@ -22,11 +22,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
         PreferenceScreen preferenceScreen = getPreferenceScreen();//So to get count of total # of preferences
         int numberOfPrefs = preferenceScreen.getPreferenceCount();
+        
 
         for (int i = 0; i < numberOfPrefs; i++){
             Preference preference = preferenceScreen.getPreference(i);//Iterate through each preference in list
             if (!(preference instanceof CheckBoxPreference)){
-                String prefValue = sharedPreferences.getString(preference.getKey(),"");
+                String prefValue = sharedPreferences.getString(preference.getKey(),getString(R.string.default_preference_units));
                 setPreferenceSummary(preference,prefValue);
             }
         }

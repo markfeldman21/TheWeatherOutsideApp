@@ -46,7 +46,7 @@ public class WeatherPreferences {
     public static String getPreferredUnits(Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getString(context.getString(R.string.pref_units_key),
-                context.getString(R.string.array_value_metric));
+                context.getString(R.string.array_value_imperial));
     }
 
 

@@ -110,7 +110,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             startLoader(weatherID);
         }
 
-        String dayOfWeek = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK));
+        //String dayOfWeek = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK));
         String weatherDate = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DATE));
         String humidity = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_HUMIDITY));
         String icon = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_ICON));
@@ -131,7 +131,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         date.setText(weatherDate);
         detailConditions.setText(conditions);
         retrievedTemp.setText(finalUnit);
-        day.setText(dayOfWeek);
+        //day.setText(dayOfWeek);
     }
 
     @Override

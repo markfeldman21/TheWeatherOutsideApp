@@ -77,9 +77,9 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
 
 
         String prefUnit = WeatherPreferences.getPreferredUnits(context);
-        if (prefUnit.equals("metric")){
+        if (prefUnit.equals("celcius")){
             finalUnit = highCelcius + " \u2103";
-        }else if (prefUnit.equals("imperial")) {
+        }else if (prefUnit.equals("fahrenheit")) {
             finalUnit = highFah + "\u2109";
         }
 

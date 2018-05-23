@@ -41,14 +41,14 @@
     <string name="location_key" translatable="false">location</string>
     <string name="location_title">Location</string>
 
-    <string name="default_preference_units">Metric</string>
+    <string name="default_preference_units">Fahrenheit</string>
     <string name="pref_units_key" translatable="false">units</string>
     <string name="units_title">Units Of Measurement</string>
 
-    <string name="array_value_metric" translatable="false">metric</string>
-    <string name="array_value_imperial" translatable="false">imperial</string>
-    <string name="array_label_metric">Metric</string>
-    <string name="array_label_imperial">Imperial</string>
+    <string name="array_value_metric" translatable="false">celcius</string>
+    <string name="array_value_imperial" translatable="false">fahrenheit</string>
+    <string name="array_label_metric">Celcius</string>
+    <string name="array_label_imperial">Fahrenheit</string>
 
     <!-- - - - - - - - - - - - - -->
     <!--Used by SunshineDateUtils-->
