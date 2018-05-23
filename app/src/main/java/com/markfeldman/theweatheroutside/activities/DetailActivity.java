@@ -110,7 +110,7 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
             startLoader(weatherID);
         }
 
-        //String dayOfWeek = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK));
+        String dayOfWeek = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DAY_OF_WEEK));
         String weatherDate = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_DATE));
         String humidity = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_HUMIDITY));
         String icon = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_ICON));
@@ -119,19 +119,18 @@ public class DetailActivity extends AppCompatActivity implements LoaderManager.L
         String highFah = data.getString(data.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));
         String finalUnit = "";
         String prefUnit = WeatherPreferences.getPreferredUnits(this);
-        if (prefUnit.equals("metric")){
+        if (prefUnit.equals(getString(R.string.array_value_metric))){
             finalUnit = highCelcius + "\u2103";
-        }else if (prefUnit.equals("imperial")) {
+        }else if (prefUnit.equals(getString(R.string.array_value_imperial))) {
             finalUnit = highFah + "\u2109";
         }
         int imageToUse = WeatherUtils.whichIconToUse(icon);
         weatherImage.setImageResource(imageToUse);
         weatherData = highCelcius + " " + highFah;
-        retrievedTemp.setText(weatherData);
         date.setText(weatherDate);
         detailConditions.setText(conditions);
         retrievedTemp.setText(finalUnit);
-        //day.setText(dayOfWeek);
+        day.setText(dayOfWeek);
     }
 
     @Override
