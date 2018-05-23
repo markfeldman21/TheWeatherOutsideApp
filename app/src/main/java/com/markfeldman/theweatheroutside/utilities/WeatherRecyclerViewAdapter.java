@@ -83,6 +83,7 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
             finalUnit = highFah + "\u2109";
         }
 
+
         holder.weatherData.setText(weatherDay);
         holder.weatherImage.setImageResource(iconResource);
         holder.weatherConditions.setText(conditions);
