@@ -122,11 +122,6 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id){
-            case R.id.action_refresh:{
-                mRecyclerView.setVisibility(View.INVISIBLE);
-                retrieveData();
-                break;
-            }
             case R.id.show_map:{
                 showMap();
                 break;

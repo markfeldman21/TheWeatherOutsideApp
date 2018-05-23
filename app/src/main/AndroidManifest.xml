@@ -26,7 +26,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity"/>
         </activity>
-        <activity android:name=".activities.SettingsActivity"/>
+        <activity android:name=".activities.SettingsActivity"
+            android:theme="@style/PrefTheme"/>
         <provider
             android:authorities="com.markfeldman.theweatheroutside"
             android:name=".data.WeatherContentProvider"
