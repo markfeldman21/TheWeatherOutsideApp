@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.markfeldman.theweatheroutside.activities.DetailActivity"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:background="@color/offWhite"
+    android:layout_height="match_parent"
     android:paddingBottom="16dp"
     android:paddingEnd="32dp"
     android:paddingLeft="32dp"
@@ -13,54 +12,64 @@
     android:paddingStart="32dp"
     android:paddingTop="4dp">
 
+
+
     <TextView
-        android:id="@+id/weather_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/date"
         android:layout_marginBottom="16dp"
         android:textSize="30sp"
         android:textStyle="bold"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/weather_icon"
+        app:layout_constraintBottom_toTopOf="@+id/detail_weather_image"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:text="September 24"/>
+        tools:text="September 24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/detail_day"
+        app:layout_constraintTop_toBottomOf="@id/date"
+        app:layout_constraintStart_toStartOf="@id/date"
+        app:layout_constraintEnd_toEndOf="@id/date"
+        style="@style/TextAppearance.AppCompat.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
     <ImageView
-        android:id="@+id/weather_icon"
+        android:id="@+id/detail_weather_image"
         android:src="@drawable/art_clear"
         android:paddingTop="16dp"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        app:layout_constraintTop_toBottomOf="@id/weather_data"
+        app:layout_constraintTop_toBottomOf="@id/date"
         app:layout_constraintStart_toStartOf="parent"
-        />
+        android:layout_width="200dp"
+        android:layout_height="200dp" />
 
 
     <TextView
-        android:id="@+id/main_weather_degrees"
+        android:id="@+id/retrieved_temp"
         android:paddingTop="16dp"
         android:paddingLeft="16dp"
         android:textSize="40sp"
         android:gravity="center"
         tools:text="10\u00b0"
-        app:layout_constraintTop_toBottomOf="@+id/weather_data"
-        app:layout_constraintStart_toEndOf="@id/weather_icon"
+        app:layout_constraintTop_toBottomOf="@+id/date"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/detail_weather_image"
         style="@style/TextAppearance.AppCompat.Medium"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/main_weather_conditions"
+        android:id="@+id/detail_conditions"
         tools:text="CLOUDY TEST"
         android:textStyle="italic"
-        app:layout_constraintTop_toBottomOf="@id/main_weather_degrees"
-        app:layout_constraintStart_toStartOf="@id/main_weather_degrees"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/retrieved_temp"
+        app:layout_constraintStart_toStartOf="@id/retrieved_temp"
+        app:layout_constraintEnd_toEndOf="@id/retrieved_temp"
         style="@style/TextAppearance.AppCompat.Small"
         android:paddingTop="16dp"
         android:layout_width="wrap_content"

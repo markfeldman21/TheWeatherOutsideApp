@@ -66,7 +66,8 @@ public class MainActivity extends AppCompatActivity implements WeatherRecyclerVi
         weatherRecyclerViewAdapter = new WeatherRecyclerViewAdapter(this,this);
         mRecyclerView.setAdapter(weatherRecyclerViewAdapter);
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
-        SyncUtility.initialize(this);
+        SyncUtility.startImmediateSync(this);
+        SyncUtility.initializeService(this);
         this.getSupportLoaderManager().initLoader(LOADER_ID, null, this);
     }
 

@@ -74,13 +74,11 @@ public class WeatherRecyclerViewAdapter extends RecyclerView.Adapter<WeatherRecy
         String highCelcius = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPC));
         String highFah = mCursor.getString(mCursor.getColumnIndex(WeatherContract.WeatherData.COLUMN_HIGH_TEMPF));
         int iconResource = WeatherUtils.whichIconToUse(icon);
-
+        finalUnit = highFah + "\u2109";
 
         String prefUnit = WeatherPreferences.getPreferredUnits(context);
         if (prefUnit.equals("celcius")){
             finalUnit = highCelcius + " \u2103";
-        }else if (prefUnit.equals("fahrenheit")) {
-            finalUnit = highFah + "\u2109";
         }
 
 

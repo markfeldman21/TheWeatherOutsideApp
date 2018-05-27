@@ -2,6 +2,7 @@ package com.markfeldman.theweatheroutside.services;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
@@ -14,9 +15,11 @@ public class FireBaseJobService extends JobService {
         fetchMovieDate = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
+
                 Context context = getApplicationContext();
                 WeatherSyncTask.syncWeatherDB(context);
                 jobFinished(job,false);
+                Log.d("FIREBASEJOB", "IN FIRE BASE JOB FINISHED");
                 return null;
             }
             @Override

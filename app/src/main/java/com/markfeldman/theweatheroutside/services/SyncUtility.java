@@ -23,15 +23,17 @@ public class SyncUtility {
     private static boolean initialized;
     private static final String WEATHER_SYNC_TAG = "weather_sync";
 
-    synchronized public static void initialize(@NonNull final Context context){
+    synchronized public static void initializeService(@NonNull final Context context){
         if (initialized){
-            Log.d("SYNCUTILITY", "JOB IS INITIALIZED!");
+            Log.d("SYNCUTILITY", "ALREADY INITIALIZED, GO BACK");
             return;
         }
         initialized = true;
+        Log.d("SYNCUTILITY", "JOB SCHEDULED FIRST TIME!");
 
         scheduleFirebaseJobSync(context);
 
+        /*
         Thread checkForEmpty = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -49,9 +51,11 @@ public class SyncUtility {
             }
         });
         checkForEmpty.start();
+        */
     }
 
     public static void startImmediateSync(@NonNull final Context context) {
+        Log.d("SYNCUTILITY", "IMMEDIATE SYNC!");
         Intent intentToSyncImmediately = new Intent(context, WeatherIntentService.class);
         intentToSyncImmediately.setAction(WeatherIntentService.EXECUTE_NOW);
         context.startService(intentToSyncImmediately);
@@ -60,7 +64,6 @@ public class SyncUtility {
     private static void scheduleFirebaseJobSync(@NonNull final Context context){
 
         try {
-            Log.d("SYNCUTILITY", "JOB SCHEDULED!");
             com.firebase.jobdispatcher.Driver driver = new GooglePlayDriver(context);
             FirebaseJobDispatcher firebaseJobDispatcher = new FirebaseJobDispatcher(driver);
 
@@ -70,7 +73,7 @@ public class SyncUtility {
                     .setConstraints(Constraint.ON_ANY_NETWORK)
                     .setLifetime(Lifetime.FOREVER)
                     .setRecurring(true)
-                    .setTrigger(Trigger.executionWindow(0,3))
+                    .setTrigger(Trigger.executionWindow(1,5))
                     .setReplaceCurrent(true)
                     .build();
             firebaseJobDispatcher.schedule(syncJob);
@@ -80,5 +83,7 @@ public class SyncUtility {
         }
         Log.v("TAG","JOB TRIGGERED!!!!!!!!!!!!!");
     }
+
+
 
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.markfeldman.theweatheroutside.data.WeatherContract;
 import com.markfeldman.theweatheroutside.data.WeatherPreferences;
@@ -15,17 +16,15 @@ public class WeatherSyncTask {
     private static String TAG = WeatherSyncTask.class.getSimpleName();
     synchronized public static void syncWeatherDB(Context context){
         try{
-            Log.d(TAG,"JOB WAS EXECUTED!!!!" );
+
             Uri weatherQueryUri = WeatherContract.WeatherData.CONTENT_URI;
             String weatherLocation = WeatherPreferences.getPreferredWeatherLocation(context);
-            Log.d(TAG,"LOCATION IS " + weatherLocation );
             String okHttpResponse = NetworkUtils.okHttpDataRetrieval(weatherLocation);
+            Log.d(TAG, "RESPONSE IS " + okHttpResponse );
             ContentValues[] jsonResults = JsonUtils.getSimpleWeatherStringsFromJson(context,okHttpResponse);
-
             context.getContentResolver().delete(weatherQueryUri,null,null);
             context.getContentResolver().bulkInsert(weatherQueryUri,jsonResults);
-
-
+            Log.d(TAG, "SYNCED DATABASE...." );
         }catch (Exception e){
             Log.d(TAG, "PROBLEM IN SYNC + " + e);
         }
