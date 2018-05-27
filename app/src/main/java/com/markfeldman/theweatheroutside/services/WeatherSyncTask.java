@@ -20,7 +20,6 @@ public class WeatherSyncTask {
             Uri weatherQueryUri = WeatherContract.WeatherData.CONTENT_URI;
             String weatherLocation = WeatherPreferences.getPreferredWeatherLocation(context);
             String okHttpResponse = NetworkUtils.okHttpDataRetrieval(weatherLocation);
-            Log.d(TAG, "RESPONSE IS " + okHttpResponse );
             ContentValues[] jsonResults = JsonUtils.getSimpleWeatherStringsFromJson(context,okHttpResponse);
             context.getContentResolver().delete(weatherQueryUri,null,null);
             context.getContentResolver().bulkInsert(weatherQueryUri,jsonResults);

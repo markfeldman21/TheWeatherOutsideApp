@@ -38,7 +38,7 @@ public final class NetworkUtils {
     final static String UNITS_PARAM = "units";
     final static String DAYS_PARAM = "cnt";
 
-    private static String URLStringbuildUrl(String locationQuery) {
+    private static URL URLStringbuildUrl(String locationQuery) {
         Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                 .appendPath(QUERY_PARAM)
                 .appendPath(locationQuery)
@@ -53,7 +53,7 @@ public final class NetworkUtils {
         }
 
         assert url != null;
-        return url.toString();
+        return url;
     }
 
 
@@ -64,15 +64,46 @@ public final class NetworkUtils {
 
 
     public static String okHttpDataRetrieval(String weatherLocation) throws IOException {
-        String url = URLStringbuildUrl(weatherLocation);
+        URL url = URLStringbuildUrl(weatherLocation);
+        String responseBody = null;
         Log.d(TAG, "IN UTILS = " + url);
 
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-        Response response = client.newCall(request).execute();
-        return response.body().string();
-    }
 
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        try {
+            InputStream in = urlConnection.getInputStream();
+
+            Scanner scanner = new Scanner(in);
+            scanner.useDelimiter("\\A");
+
+            boolean hasInput = scanner.hasNext();
+            String response = null;
+            if (hasInput) {
+                response = scanner.next();
+            }
+            scanner.close();
+            Log.d("TAG", "INSIDE NETWORK UTILS RESPONSE IS " + response);
+            return response;
+        } finally {
+            urlConnection.disconnect();
+        }
+    }
+/*
+        try{
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+            Response response = client.newCall(request).execute();
+            if (response!=null){
+                responseBody = response.body().string();
+                Log.d("TAG", "INSIDE NETWORK UTILS RESPONSE IS " + responseBody);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return responseBody;
+    }
+*/
 }
